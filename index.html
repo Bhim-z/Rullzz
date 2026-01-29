@@ -1,0 +1,3082 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Milik RM Squad - ML Counter Guide</title>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;800&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #00d4ff;
+            --secondary: #ff00ff;
+            --accent: #ffea00;
+            --dark: #0a0e27;
+            --darker: #050815;
+            --card-bg: rgba(15, 23, 42, 0.95);
+            --glow: rgba(0, 212, 255, 0.4);
+        }
+
+        body {
+            font-family: 'Exo 2', sans-serif;
+            background: var(--darker);
+            color: #fff;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 0, 255, 0.1) 0%, transparent 50%),
+                linear-gradient(180deg, var(--darker) 0%, var(--dark) 100%);
+            z-index: -1;
+        }
+
+        .header {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(255, 0, 255, 0.1) 100%);
+            border-bottom: 2px solid var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--primary), var(--secondary), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 0.5rem;
+            animation: glow-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes glow-pulse {
+            0%, 100% { filter: drop-shadow(0 0 10px var(--glow)); }
+            50% { filter: drop-shadow(0 0 20px var(--glow)) drop-shadow(0 0 30px var(--glow)); }
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--primary);
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .search-section {
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 1.2rem 1.5rem;
+            font-size: 1.1rem;
+            background: var(--card-bg);
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 15px;
+            color: #fff;
+            font-family: 'Exo 2', sans-serif;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 30px var(--glow);
+        }
+
+        .search-box::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .role-filter {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .role-btn {
+            padding: 0.8rem 1.5rem;
+            background: var(--card-bg);
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 25px;
+            color: #fff;
+            cursor: pointer;
+            font-family: 'Exo 2', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .role-btn:hover, .role-btn.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-color: var(--primary);
+            box-shadow: 0 0 20px var(--glow);
+            transform: translateY(-2px);
+        }
+
+        .heroes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .hero-card {
+            background: var(--card-bg);
+            border: 2px solid rgba(0, 212, 255, 0.2);
+            border-radius: 15px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(255, 0, 255, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .hero-card:hover::before {
+            opacity: 1;
+        }
+
+        .hero-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 40px var(--glow);
+        }
+
+        .hero-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            box-shadow: 0 5px 20px rgba(0, 212, 255, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-role {
+            font-size: 0.85rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .result-section {
+            background: var(--card-bg);
+            border: 2px solid var(--primary);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-top: 2rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 50px var(--glow);
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid rgba(0, 212, 255, 0.3);
+        }
+
+        .result-header h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .counters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .counter-card {
+            background: rgba(0, 212, 255, 0.05);
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .counter-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 5px 25px var(--glow);
+            transform: translateX(5px);
+        }
+
+        .counter-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .counter-reason {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+
+        .build-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid rgba(0, 212, 255, 0.3);
+        }
+
+        .build-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .build-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .build-item {
+            background: rgba(255, 0, 255, 0.05);
+            border: 2px solid rgba(255, 0, 255, 0.3);
+            border-radius: 12px;
+            padding: 1.2rem;
+        }
+
+        .build-item-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .build-item-desc {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.5;
+        }
+
+        .tips-section {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(255, 234, 0, 0.05);
+            border: 2px solid rgba(255, 234, 0, 0.3);
+            border-radius: 15px;
+        }
+
+        .tips-title {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .tips-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tips-list li {
+            padding: 0.7rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.6;
+        }
+
+        .tips-list li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .heroes-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 1rem;
+            }
+
+            .counters-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .result-section {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>⚔️ Milik RM Squad ⚔️</h1>
+        <p class="subtitle">ML Counter Guide - Pilih Hero & Dapatkan Counter + Build Terbaik</p>
+    </div>
+
+    <div class="container">
+        <div class="search-section">
+            <input type="text" class="search-box" id="searchBox" placeholder="🔍 Cari hero...">
+            
+            <div class="role-filter">
+                <button class="role-btn active" data-role="all">Semua</button>
+                <button class="role-btn" data-role="tank">Tank</button>
+                <button class="role-btn" data-role="fighter">Fighter</button>
+                <button class="role-btn" data-role="assassin">Assassin</button>
+                <button class="role-btn" data-role="mage">Mage</button>
+                <button class="role-btn" data-role="marksman">Marksman</button>
+                <button class="role-btn" data-role="support">Support</button>
+            </div>
+        </div>
+
+        <div class="heroes-grid" id="heroesGrid"></div>
+
+        <div id="resultSection" class="result-section hidden"></div>
+    </div>
+
+    <script>
+        const heroesData = {
+            // TANK
+            "Tigreal": {
+                role: "tank",
+                counters: [
+                    { name: "Karrie", reason: "True damage-nya menembus defense Tigreal dan bisa kite dengan baik" },
+                    { name: "Valir", reason: "Knockback mencegah Tigreal masuk dan ulti, kontrol jarak jauh" },
+                    { name: "Khufra", reason: "Counter dash Tigreal dan bisa lock target dengan ulti" }
+                ],
+                build: {
+                    core: [
+                        { name: "Cursed Helmet", desc: "Magic damage per detik untuk clear wave dan poke" },
+                        { name: "Oracle", desc: "Shield dan HP regen meningkat drastis untuk sustain" },
+                        { name: "Antique Cuirass", desc: "Reduce physical attack musuh, wajib vs marksman" }
+                    ],
+                    situational: [
+                        { name: "Athena's Shield", desc: "Vs mage burst damage" },
+                        { name: "Dominance Ice", desc: "Counter regen dan attack speed marksman" }
+                    ]
+                },
+                tips: [
+                    "Gunakan ultimate saat musuh berkumpul untuk teamfight maksimal",
+                    "Jangan engage sendirian, tunggu tim siap follow up",
+                    "Skill 2 bisa cancel dash hero seperti Chou, Fanny, Hayabusa"
+                ]
+            },
+            "Akai": {
+                role: "tank",
+                counters: [
+                    { name: "Khufra", reason: "Counter jump Akai dan bisa break ultimate dengan skill 1" },
+                    { name: "Franco", reason: "Hook bisa pull Akai keluar saat ulti dan CC chain" },
+                    { name: "Valir", reason: "Knockback mencegah Akai masuk dan ganggu posisi ulti" }
+                ],
+                build: {
+                    core: [
+                        { name: "Cursed Helmet", desc: "Damage AOE saat ulti rolling" },
+                        { name: "Dominance Ice", desc: "Counter lifesteal dan attack speed" },
+                        { name: "Antique Cuirass", desc: "Reduce damage physical untuk tanking" }
+                    ],
+                    situational: [
+                        { name: "Oracle", desc: "Boost shield dan regen" },
+                        { name: "Athena's Shield", desc: "Vs magic burst" }
+                    ]
+                },
+                tips: [
+                    "Ultimate paling efektif untuk push musuh ke wall atau turret",
+                    "Skill 1 bisa jump ke backline untuk ganggu marksman/mage",
+                    "Kombinasi skill 2 + ultimate untuk CC maksimal"
+                ]
+            },
+            "Grock": {
+                role: "tank",
+                counters: [
+                    { name: "Karrie", reason: "True damage ignore defense Grock yang tinggi" },
+                    { name: "Valir", reason: "Knockback mencegah Grock charge dan maintain distance" },
+                    { name: "Diggie", reason: "Immune CC mencegah Grock lock target dengan ultimate" }
+                ],
+                build: {
+                    core: [
+                        { name: "Warrior Boots", desc: "Extra physical defense dan movement speed" },
+                        { name: "Cursed Helmet", desc: "Magic damage AOE untuk clear dan poke" },
+                        { name: "Dominance Ice", desc: "Counter attack speed dan lifesteal" }
+                    ],
+                    situational: [
+                        { name: "Blade Armor", desc: "Reflect damage vs basic attack hero" },
+                        { name: "Thunder Belt", desc: "Extra HP, mana, dan true damage" }
+                    ]
+                },
+                tips: [
+                    "Gunakan passive di dekat wall untuk defense dan damage maksimal",
+                    "Skill 1 charge efektif untuk engage atau escape",
+                    "Ultimate untuk lock target carry musuh di teamfight"
+                ]
+            },
+
+            // FIGHTER
+            "Chou": {
+                role: "fighter",
+                counters: [
+                    { name: "Khufra", reason: "Counter semua dash Chou dan lock dengan ulti" },
+                    { name: "Esmeralda", reason: "Shield absorb damage dan menang trade dengan Chou" },
+                    { name: "Minsitthar", reason: "Ultimate disable dash Chou sepenuhnya" }
+                ],
+                build: {
+                    core: [
+                        { name: "Tough Boots", desc: "Reduce CC duration untuk mobility" },
+                        { name: "War Axe", desc: "Physical attack dan penetration stack" },
+                        { name: "Hunter Strike", desc: "Burst damage dan cooldown reduction" }
+                    ],
+                    situational: [
+                        { name: "Blade of Despair", desc: "Burst damage maksimal untuk one shot" },
+                        { name: "Immortality", desc: "Second life untuk dive backline" }
+                    ]
+                },
+                tips: [
+                    "Combo: Skill 1 (3x) → Skill 2 → Ultimate → Basic Attack",
+                    "Gunakan immune frame skill 2 untuk dodge skill penting musuh",
+                    "Ultimate bisa kick musuh ke tower atau ke arah tim"
+                ]
+            },
+            "Freya": {
+                role: "fighter",
+                counters: [
+                    { name: "Ruby", reason: "Lifesteal tinggi dan CC chain untuk kite Freya" },
+                    { name: "Thamuz", reason: "Sustain lebih baik dan damage over time menang trade" },
+                    { name: "Esmeralda", reason: "Shield absorb damage Freya dan kontrol lebih baik" }
+                ],
+                build: {
+                    core: [
+                        { name: "Demon Shoes", desc: "Mana sustain untuk spam skill" },
+                        { name: "Calamity Reaper", desc: "Mana, magic power, dan true damage proc" },
+                        { name: "Holy Crystal", desc: "Magic power tinggi untuk burst damage" }
+                    ],
+                    situational: [
+                        { name: "Immortality", desc: "Dive safety dengan second life" },
+                        { name: "Divine Glaive", desc: "Magic penetration vs high magic defense" }
+                    ]
+                },
+                tips: [
+                    "Aktifkan ulti untuk sacred orbs sebelum engage",
+                    "Stack passive dulu sebelum all in dengan skill 1",
+                    "Skill 2 berikan shield besar, gunakan saat trade damage"
+                ]
+            },
+            "Paquito": {
+                role: "fighter",
+                counters: [
+                    { name: "Khufra", reason: "Counter dash dan skill 2 Paquito" },
+                    { name: "Jawhead", reason: "Throw Paquito keluar saat mau engage dan high damage" },
+                    { name: "Yu Zhong", reason: "Sustain tinggi dan damage over time menang trade" }
+                ],
+                build: {
+                    core: [
+                        { name: "Tough Boots", desc: "Reduce CC untuk mobility" },
+                        { name: "War Axe", desc: "Physical attack stack untuk damage" },
+                        { name: "Hunter Strike", desc: "Burst dan cooldown reduction" }
+                    ],
+                    situational: [
+                        { name: "Malefic Roar", desc: "Physical penetration vs tank" },
+                        { name: "Blade of Despair", desc: "Extra burst damage" }
+                    ]
+                },
+                tips: [
+                    "Stack passive 4x dulu untuk damage maksimal",
+                    "Combo: Enhanced skill 1 → Skill 2 → Ultimate → Enhanced skill 1",
+                    "Ultimate untuk lock dan burst target squishy"
+                ]
+            },
+
+            // ASSASSIN
+            "Lancelot": {
+                role: "assassin",
+                counters: [
+                    { name: "Saber", reason: "Lock Lancelot dengan ultimate dan burst damage tinggi" },
+                    { name: "Helcurt", reason: "Silence mencegah Lancelot dash dan kabur" },
+                    { name: "Natalia", reason: "Silence awal fight dan damage lebih tinggi" }
+                ],
+                build: {
+                    core: [
+                        { name: "Tough Boots", desc: "Reduce CC untuk survive" },
+                        { name: "War Axe", desc: "Physical attack dan penetration" },
+                        { name: "Endless Battle", desc: "True damage dan lifesteal" }
+                    ],
+                    situational: [
+                        { name: "Hunter Strike", desc: "Burst dan movement speed" },
+                        { name: "Blade of Despair", desc: "Extra damage untuk one shot" }
+                    ]
+                },
+                tips: [
+                    "Gunakan immune frame saat dash untuk dodge skill musuh",
+                    "Farm cepat untuk rush item core",
+                    "Target mage dan marksman yang posisi salah"
+                ]
+            },
+            "Hayabusa": {
+                role: "assassin",
+                counters: [
+                    { name: "Saber", reason: "Ultimate lock Hayabusa dan burst damage" },
+                    { name: "Helcurt", reason: "Silence mencegah escape Hayabusa" },
+                    { name: "Lancelot", reason: "Immune damage Hayabusa dan burst balik" }
+                ],
+                build: {
+                    core: [
+                        { name: "Warrior Boots", desc: "Physical defense untuk survive" },
+                        { name: "War Axe", desc: "Physical penetration stack" },
+                        { name: "Hunter Strike", desc: "Burst damage tinggi" }
+                    ],
+                    situational: [
+                        { name: "Malefic Roar", desc: "Extra penetration vs tank" },
+                        { name: "Blade of Despair", desc: "Maximum burst" }
+                    ]
+                },
+                tips: [
+                    "Ultimate saat target sendirian atau HP rendah",
+                    "Gunakan shadow untuk dodge skill dan juke",
+                    "Clear wave cepat dengan skill 1 untuk push dan rotate"
+                ]
+            },
+            "Fanny": {
+                role: "assassin",
+                counters: [
+                    { name: "Khufra", reason: "Counter cable Fanny dan lock dengan ultimate" },
+                    { name: "Saber", reason: "Lock dan burst Fanny instantly" },
+                    { name: "Eudora", reason: "Stun dan burst damage kill Fanny cepat" }
+                ],
+                build: {
+                    core: [
+                        { name: "Tough Boots", desc: "Reduce CC critical untuk Fanny" },
+                        { name: "Blade of Heptaseas", desc: "Extra damage burst awal" },
+                        { name: "Endless Battle", desc: "True damage dan sustain" }
+                    ],
+                    situational: [
+                        { name: "Blade of Despair", desc: "Maximum damage output" },
+                        { name: "Malefic Roar", desc: "Penetration untuk kill tank" }
+                    ]
+                },
+                tips: [
+                    "Buff blue wajib untuk energy sustain",
+                    "Cable mechanic butuh practice untuk smooth gameplay",
+                    "Target squishy hero yang posisi sendirian"
+                ]
+            },
+
+            // MAGE
+            "Eudora": {
+                role: "mage",
+                counters: [
+                    { name: "Lancelot", reason: "Immune damage dan burst Eudora lebih cepat" },
+                    { name: "Ling", reason: "Untargetable di wall dan mobility tinggi" },
+                    { name: "Diggie", reason: "Immune stun dari ultimate Eudora" }
+                ],
+                build: {
+                    core: [
+                        { name: "Arcane Boots", desc: "Magic penetration untuk damage" },
+                        { name: "Clock of Destiny", desc: "HP dan magic power stack" },
+                        { name: "Holy Crystal", desc: "Burst damage maksimal" }
+                    ],
+                    situational: [
+                        { name: "Divine Glaive", desc: "Magic penetration vs tank" },
+                        { name: "Blood Wings", desc: "Shield dan magic power tinggi" }
+                    ]
+                },
+                tips: [
+                    "Combo: Skill 2 → Ultimate → Skill 1 untuk burst maksimal",
+                    "Gunakan passive untuk stun yang lebih lama",
+                    "Positioning penting, stay di backline"
+                ]
+            },
+            "Kagura": {
+                role: "mage",
+                counters: [
+                    { name: "Natalia", reason: "Silence dan burst damage kill Kagura" },
+                    { name: "Saber", reason: "Lock dan burst Kagura instantly" },
+                    { name: "Helcurt", reason: "Silence mencegah combo Kagura" }
+                ],
+                build: {
+                    core: [
+                        { name: "Arcane Boots", desc: "Magic penetration awal" },
+                        { name: "Clock of Destiny", desc: "HP dan magic power stack" },
+                        { name: "Lightning Truncheon", desc: "Burst damage dan mana" }
+                    ],
+                    situational: [
+                        { name: "Holy Crystal", desc: "Extra burst damage" },
+                        { name: "Immortality", desc: "Second life untuk safe play" }
+                    ]
+                },
+                tips: [
+                    "Master umbrella positioning untuk kontrol maksimal",
+                    "Skill 2 berikan shield dan burst, gunakan wisely",
+                    "Ultimate untuk clear wave, poke, dan burst combo"
+                ]
+            },
+            "Pharsa": {
+                role: "mage",
+                counters: [
+                    { name: "Fanny", reason: "High mobility dan dive Pharsa dengan mudah" },
+                    { name: "Hayabusa", reason: "Ultimate lock Pharsa dan burst" },
+                    { name: "Natalia", reason: "Silence dan burst kill Pharsa cepat" }
+                ],
+                build: {
+                    core: [
+                        { name: "Arcane Boots", desc: "Magic penetration" },
+                        { name: "Clock of Destiny", desc: "HP stack untuk survive" },
+                        { name: "Holy Crystal", desc: "Magic power tinggi" }
+                    ],
+                    situational: [
+                        { name: "Divine Glaive", desc: "Penetration vs tank" },
+                        { name: "Immortality", desc: "Safety item" }
+                    ]
+                },
+                tips: [
+                    "Gunakan skill 1 untuk mobility dan escape",
+                    "Ultimate untuk poke dan zone control teamfight",
+                    "Positioning di backline sangat penting"
+                ]
+            },
+
+            // MARKSMAN
+            "Layla": {
+                role: "marksman",
+                counters: [
+                    { name: "Natalia", reason: "Silence dan burst damage kill Layla mudah" },
+                    { name: "Lancelot", reason: "High mobility dan dive Layla" },
+                    { name: "Saber", reason: "Lock dan one shot Layla" }
+                ],
+                build: {
+                    core: [
+                        { name: "Swift Boots", desc: "Attack speed untuk DPS" },
+                        { name: "Berserker's Fury", desc: "Critical damage tinggi" },
+                        { name: "Scarlet Phantom", desc: "Critical rate dan attack speed" }
+                    ],
+                    situational: [
+                        { name: "Malefic Roar", desc: "Penetration vs tank" },
+                        { name: "Wind of Nature", desc: "Immune physical damage untuk survive" }
+                    ]
+                },
+                tips: [
+                    "Posisi selalu di belakang tank",
+                    "Skill 1 untuk poke dari jarak aman",
+                    "Ultimate untuk burst target yang di-CC tim"
+                ]
+            },
+            "Miya": {
+                role: "marksman",
+                counters: [
+                    { name: "Saber", reason: "Lock dan burst Miya instantly" },
+                    { name: "Natalia", reason: "Silence mencegah ultimate Miya" },
+                    { name: "Karina", reason: "High burst damage kill Miya cepat" }
+                ],
+                build: {
+                    core: [
+                        { name: "Swift Boots", desc: "Attack speed untuk DPS" },
+                        { name: "Demon Hunter Sword", desc: "Lifesteal dan damage vs tank" },
+                        { name: "Golden Staff", desc: "Extra attack untuk true damage" }
+                    ],
+                    situational: [
+                        { name: "Corrosion Scythe", desc: "Slow untuk kiting" },
+                        { name: "Wind of Nature", desc: "Physical immunity" }
+                    ]
+                },
+                tips: [
+                    "Stack passive attack speed dulu sebelum fight",
+                    "Ultimate untuk escape atau reposition",
+                    "Golden Staff meningkatkan damage true drastis"
+                ]
+            },
+            "Karrie": {
+                role: "marksman",
+                counters: [
+                    { name: "Natalia", reason: "Silence dan burst sebelum Karrie bisa kite" },
+                    { name: "Saber", reason: "Lock dan burst damage tinggi" },
+                    { name: "Helcurt", reason: "Silence dan darkness mencegah Karrie react" }
+                ],
+                build: {
+                    core: [
+                        { name: "Swift Boots", desc: "Attack speed untuk proc passive" },
+                        { name: "Golden Staff", desc: "Extra basic attack untuk true damage" },
+                        { name: "Demon Hunter Sword", desc: "Lifesteal dan damage vs tank" }
+                    ],
+                    situational: [
+                        { name: "Corrosion Scythe", desc: "Slow untuk kiting better" },
+                        { name: "Wind of Nature", desc: "Immune physical untuk survive dive" }
+                    ]
+                },
+                tips: [
+                    "Skill 1 untuk dash dan reposition saat kiting",
+                    "Focus tank dulu karena true damage passive",
+                    "Ultimate untuk extra mobility dan damage"
+                ]
+            },
+
+            // SUPPORT
+            "Estes": {
+                role: "support",
+                counters: [
+                    { name: "Baxia", reason: "Anti-heal passive counter regen Estes drastis" },
+                    { name: "Nana", reason: "Molina interrupt ultimate Estes" },
+                    { name: "Franco", reason: "Hook Estes keluar dari posisi aman" }
+                ],
+                build: {
+                    core: [
+                        { name: "Demon Shoes", desc: "Mana regen untuk spam heal" },
+                        { name: "Enchanted Talisman", desc: "Cooldown reduction dan mana regen" },
+                        { name: "Dominance Ice", desc: "Counter lifesteal musuh" }
+                    ],
+                    situational: [
+                        { name: "Athena's Shield", desc: "Magic defense untuk survive" },
+                        { name: "Oracle", desc: "Boost heal dan shield effect" }
+                    ]
+                },
+                tips: [
+                    "Ultimate di area teamfight untuk heal AOE maksimal",
+                    "Stay di belakang dan jangan terlalu exposed",
+                    "Skill 2 untuk slow dan kiting"
+                ]
+            },
+            "Diggie": {
+                role: "support",
+                counters: [
+                    { name: "Baxia", reason: "Reduce heal dan shield dari Diggie" },
+                    { name: "Karrie", reason: "True damage ignore shield Diggie" },
+                    { name: "Ling", reason: "Mobility tinggi dan bisa avoid Diggie skill" }
+                ],
+                build: {
+                    core: [
+                        { name: "Arcane Boots", desc: "Magic penetration untuk poke" },
+                        { name: "Fleeting Time", desc: "Cooldown reduction untuk spam ultimate" },
+                        { name: "Necklace of Durance", desc: "Anti-heal musuh" }
+                    ],
+                    situational: [
+                        { name: "Immortality", desc: "Extra life" },
+                        { name: "Athena's Shield", desc: "Magic defense" }
+                    ]
+                },
+                tips: [
+                    "Ultimate untuk counter CC chain musuh",
+                    "Gunakan form owl untuk vision dan escape",
+                    "Skill 1 untuk poke dan zone control"
+                ]
+            },
+            "Angela": {
+                role: "support",
+                counters: [
+                    { name: "Diggie", reason: "Counter CC Angela dengan ultimate immunity" },
+                    { name: "Baxia", reason: "Anti-heal reduce efektivitas heal Angela" },
+                    { name: "Khufra", reason: "Counter mobility hero yang di-ulti Angela" }
+                ],
+                build: {
+                    core: [
+                        { name: "Arcane Boots", desc: "Magic penetration" },
+                        { name: "Enchanted Talisman", desc: "Cooldown dan mana regen" },
+                        { name: "Oracle", desc: "Boost heal dan shield" }
+                    ],
+                    situational: [
+                        { name: "Dominance Ice", desc: "Counter attack speed musuh" },
+                        { name: "Athena's Shield", desc: "Survive vs magic burst" }
+                    ]
+                },
+                tips: [
+                    "Ultimate ke fighter atau assassin untuk combo dive",
+                    "Skill 1 untuk poke dan slow musuh",
+                    "Skill 2 untuk heal dan speed buff ally"
+                ]
+            },
+
+            // HEROES TAMBAHAN POPULER
+            "Aamon": {
+                role: "assassin",
+                counters: [
+                    { name: "Saber", reason: "Lock Aamon saat invisible dan burst damage" },
+                    { name: "Helcurt", reason: "Silence mencegah Aamon combo" },
+                    { name: "Eudora", reason: "Burst damage kill Aamon sebelum bisa escape" }
+                ],
+                build: {
+                    core: [
+                        { name: "Arcane Boots", desc: "Magic penetration untuk damage" },
+                        { name: "Calamity Reaper", desc: "True damage proc dan mana" },
+                        { name: "Holy Crystal", desc: "Magic power tinggi untuk burst" }
+                    ],
+                    situational: [
+                        { name: "Divine Glaive", desc: "Extra penetration" },
+                        { name: "Blood Wings", desc: "Shield dan magic power" }
+                    ]
+                },
+                tips: [
+                    "Gunakan shards untuk invisible dan mobility",
+                    "Combo: Enhanced basic attack → Skill 1 → Skill 2",
+                    "Ultimate untuk massive AOE damage di teamfight"
+                ]
+            },
+            "Valentina": {
+                role: "mage",
+                counters: [
+                    { name: "Natalia", reason: "Silence mencegah Valentina copy ultimate" },
+                    { name: "Saber", reason: "Lock dan burst sebelum Valentina react" },
+                    { name: "Lancelot", reason: "Immune damage dan high mobility" }
+                ],
+                build: {
+                    core: [
+                        { name: "Arcane Boots", desc: "Magic penetration" },
+                        { name: "Clock of Destiny", desc: "HP dan magic power stack" },
+                        { name: "Lightning Truncheon", desc: "Burst damage" }
+                    ],
+                    situational: [
+                        { name: "Holy Crystal", desc: "Extra burst" },
+                        { name: "Immortality", desc: "Second life" }
+                    ]
+                },
+                tips: [
+                    "Copy ultimate hero key musuh untuk teamfight",
+                    "Skill 2 berikan shield saat engage atau escape",
+                    "Adaptif dengan ultimate yang di-copy"
+                ]
+            },
+            "Wanwan": {
+                role: "marksman",
+                counters: [
+                    { name: "Saber", reason: "Lock Wanwan dan burst instantly" },
+                    { name: "Natalia", reason: "Silence mencegah Wanwan escape dengan skill 2" },
+                    { name: "Franco", reason: "Hook Wanwan dari posisi aman" }
+                ],
+                build: {
+                    core: [
+                        { name: "Swift Boots", desc: "Attack speed untuk proc passive" },
+                        { name: "Demon Hunter Sword", desc: "Lifesteal dan damage" },
+                        { name: "Golden Staff", desc: "Hit weakness lebih cepat" }
+                    ],
+                    situational: [
+                        { name: "Corrosion Scythe", desc: "Slow untuk kiting" },
+                        { name: "Wind of Nature", desc: "Physical immunity" }
+                    ]
+                },
+                tips: [
+                    "Break weakness untuk trigger ultimate",
+                    "Skill 2 untuk purify CC dan reposition",
+                    "Ultimate berikan untargetable dan massive damage"
+                ]
+            },
+            "Julian": {
+                role: "fighter",
+                counters: [
+                    { name: "Khufra", reason: "Counter dash Julian dan lock dengan ultimate" },
+                    { name: "Yu Zhong", reason: "Sustain tinggi dan menang extended fight" },
+                    { name: "Esmeralda", reason: "Shield absorb damage Julian" }
+                ],
+                build: {
+                    core: [
+                        { name: "Tough Boots", desc: "Reduce CC" },
+                        { name: "Concentrated Energy", desc: "Spell vamp untuk sustain" },
+                        { name: "Holy Crystal", desc: "Magic power untuk damage" }
+                    ],
+                    situational: [
+                        { name: "Divine Glaive", desc: "Magic penetration" },
+                        { name: "Blood Wings", desc: "Shield dan extra magic power" }
+                    ]
+                },
+                tips: [
+                    "Stack passive dengan skill untuk unlock chain skill",
+                    "Gunakan skill 2 untuk mobility dan damage",
+                    "Combo: Skill 1 → Skill 2 → Ultimate → Chain skill"
+                ]
+            },
+            "Beatrix": {
+                role: "marksman",
+                counters: [
+                    { name: "Natalia", reason: "Silence dan burst Beatrix sebelum switch weapon" },
+                    { name: "Saber", reason: "Lock dan one shot" },
+                    { name: "Lancelot", reason: "High mobility dan dive Beatrix" }
+                ],
+                build: {
+                    core: [
+                        { name: "Swift Boots", desc: "Attack speed" },
+                        { name: "Berserker's Fury", desc: "Critical damage" },
+                        { name: "Scarlet Phantom", desc: "Critical rate dan attack speed" }
+                    ],
+                    situational: [
+                        { name: "Endless Battle", desc: "True damage dan lifesteal" },
+                        { name: "Wind of Nature", desc: "Physical immunity" }
+                    ]
+                },
+                tips: [
+                    "Switch weapon sesuai situasi (close, mid, long range)",
+                    "Nibiru untuk poke jarak jauh",
+                    "Renner untuk kiting dan DPS sustained"
+                ]
+            },
+            "Xavier": {
+                role: "mage",
+                counters: [
+                    { name: "Natalia", reason: "Silence mencegah Xavier combo" },
+                    { name: "Lancelot", reason: "Immune skill Xavier dan burst balik" },
+                    { name: "Fanny", reason: "High mobility untuk dodge skill Xavier" }
+                ],
+                build: {
+                    core: [
+                        { name: "Arcane Boots", desc: "Magic penetration" },
+                        { name: "Clock of Destiny", desc: "HP dan magic power" },
+                        { name: "Lightning Truncheon", desc: "Burst damage" }
+                    ],
+                    situational: [
+                        { name: "Holy Crystal", desc: "Extra magic power" },
+                        { name: "Divine Glaive", desc: "Penetration vs tank" }
+                    ]
+                },
+                tips: [
+                    "Skill 1 untuk poke dan slow",
+                    "Skill 2 untuk burst dan escape",
+                    "Ultimate untuk zone control dan massive damage"
+                ]
+            },
+            "Yin": {
+                role: "fighter",
+                counters: [
+                    { name: "Diggie", reason: "Ultimate mencegah Yin engage dengan immunity" },
+                    { name: "Khufra", reason: "Counter dash Yin dan lock" },
+                    { name: "Thamuz", reason: "Menang 1v1 dengan sustain lebih baik" }
+                ],
+                build: {
+                    core: [
+                        { name: "Tough Boots", desc: "Reduce CC" },
+                        { name: "War Axe", desc: "Physical attack stack" },
+                        { name: "Hunter Strike", desc: "Burst damage" }
+                    ],
+                    situational: [
+                        { name: "Blade of Despair", desc: "Extra burst" },
+                        { name: "Immortality", desc: "Second life dalam ultimate domain" }
+                    ]
+                },
+                tips: [
+                    "Ultimate untuk isolate target carry musuh",
+                    "Dalam domain, gunakan Lieh form untuk damage",
+                    "Combo: Skill 1 → Skill 2 → Ultimate"
+                ]
+            },
+            "Melissa": {
+                role: "marksman",
+                counters: [
+                    { name: "Natalia", reason: "Silence mencegah Melissa enter doll" },
+                    { name: "Saber", reason: "Burst damage sebelum Melissa react" },
+                    { name: "Helcurt", reason: "Silence dan darkness" }
+                ],
+                build: {
+                    core: [
+                        { name: "Swift Boots", desc: "Attack speed" },
+                        { name: "Demon Hunter Sword", desc: "Lifesteal dan damage" },
+                        { name: "Golden Staff", desc: "Extra attack" }
+                    ],
+                    situational: [
+                        { name: "Corrosion Scythe", desc: "Slow untuk control" },
+                        { name: "Wind of Nature", desc: "Physical immunity" }
+                    ]
+                },
+                tips: [
+                    "Skill 2 untuk enter doll dan reposition",
+                    "Dalam doll, immune semua damage",
+                    "Ultimate untuk massive slow dan burst damage"
+                ]
+            },
+            "Edith": {
+                role: "tank",
+                counters: [
+                    { name: "Karrie", reason: "True damage ignore defense Edith" },
+                    { name: "Valir", reason: "Knockback mencegah Edith engage" },
+                    { name: "Diggie", reason: "Immunity CC counter engage Edith" }
+                ],
+                build: {
+                    core: [
+                        { name: "Warrior Boots", desc: "Physical defense" },
+                        { name: "Cursed Helmet", desc: "Magic damage AOE" },
+                        { name: "Dominance Ice", desc: "Counter attack speed" }
+                    ],
+                    situational: [
+                        { name: "Antique Cuirass", desc: "Reduce physical attack" },
+                        { name: "Athena's Shield", desc: "Magic defense" }
+                    ]
+                },
+                tips: [
+                    "Transform ke marksman untuk damage jarak jauh",
+                    "Tank form untuk engage dan tanking",
+                    "Ultimate untuk switch form sesuai situasi"
+                ]
+            },
+            "Fredrinn": {
+                role: "tank",
+                counters: [
+                    { name: "Karrie", reason: "True damage menembus HP dan shield Fredrinn" },
+                    { name: "Valir", reason: "Knockback untuk maintain distance" },
+                    { name: "Esmeralda", reason: "Absorb shield Fredrinn untuk advantage" }
+                ],
+                build: {
+                    core: [
+                        { name: "Tough Boots", desc: "Reduce CC duration" },
+                        { name: "Cursed Helmet", desc: "Magic damage per detik" },
+                        { name: "Oracle", desc: "Boost HP regen dan shield" }
+                    ],
+                    situational: [
+                        { name: "Dominance Ice", desc: "Counter lifesteal dan attack speed" },
+                        { name: "Immortality", desc: "Second life untuk frontline" }
+                    ]
+                },
+                tips: [
+                    "Skill 2 convert HP jadi shield untuk damage reduction",
+                    "Ultimate untuk lock multiple target",
+                    "Stack HP item untuk maximize passive damage"
+                ]
+            },
+            "Novaria": {
+                role: "mage",
+                counters: [
+                    { name: "Natalia", reason: "Silence mencegah Novaria combo skill" },
+                    { name: "Lancelot", reason: "Immune skill Novaria dan mobility tinggi" },
+                    { name: "Fanny", reason: "Dive Novaria dengan cable speed" }
+                ],
+                build: {
+                    core: [
+                        { name: "Arcane Boots", desc: "Magic penetration awal game" },
+                        { name: "Clock of Destiny", desc: "HP stack dan magic power" },
+                        { name: "Lightning Truncheon", desc: "Burst damage dengan bounce" }
+                    ],
+                    situational: [
+                        { name: "Holy Crystal", desc: "Magic power maksimal" },
+                        { name: "Divine Glaive", desc: "Penetration vs high magic defense" }
+                    ]
+                },
+                tips: [
+                    "Gunakan Arm untuk CC dan shield",
+                    "Stack passive untuk extra damage",
+                    "Ultimate untuk zone control dan massive burst"
+                ]
+            },
+
+            // TANK ADDITIONAL
+            "Khufra": {
+                role: "tank",
+                counters: [
+                    { name: "Karrie", reason: "True damage ignore defense Khufra" },
+                    { name: "Diggie", reason: "Immunity CC counter semua skill Khufra" },
+                    { name: "Valir", reason: "Knockback mencegah Khufra engage" }
+                ],
+                build: {
+                    core: [
+                        { name: "Warrior Boots", desc: "Physical defense early game" },
+                        { name: "Cursed Helmet", desc: "Magic damage AOE" },
+                        { name: "Dominance Ice", desc: "Counter attack speed dan lifesteal" }
+                    ],
+                    situational: [
+                        { name: "Antique Cuirass", desc: "Reduce physical attack" },
+                        { name: "Athena's Shield", desc: "Magic defense" }
+                    ]
+                },
+                tips: [
+                    "Skill 2 counter semua dash hero",
+                    "Ultimate untuk lock dan bounce target",
+                    "Combo: Skill 1 jump → Skill 2 → Ultimate"
+                ]
+            },
+            "Atlas": {
+                role: "tank",
+                counters: [
+                    { name: "Diggie", reason: "Ultimate immunity mencegah Atlas pull" },
+                    { name: "Karrie", reason: "True damage ignore defense Atlas" },
+                    { name: "Khufra", reason: "Counter dash dan skill 1 Atlas" }
+                ],
+                build: {
+                    core: [
+                        { name: "Tough Boots", desc: "Reduce CC duration" },
+                        { name: "Cursed Helmet", desc: "Magic damage per detik" },
+                        { name: "Oracle", desc: "Boost shield dan HP regen" }
+                    ],
+                    situational: [
+                        { name: "Dominance Ice", desc: "Counter lifesteal" },
+                        { name: "Immortality", desc: "Second life untuk engage" }
+                    ]
+                },
+                tips: [
+                    "Ultimate untuk pull multiple enemies ke teamfight",
+                    "Skill 1 untuk mobility dan reposition",
+                    "Perfect timing ultimate adalah key skill"
+                ]
+            },
+            "Barats": {
+                role: "tank",
+                counters: [
+                    { name: "Karrie", reason: "True damage menembus HP tinggi Barats" },
+                    { name: "Valir", reason: "Knockback mencegah Barats eat target" },
+                    { name: "Diggie", reason: "Immunity CC counter ultimate Barats" }
+                ],
+                build: {
+                    core: [
+                        { name: "Warrior Boots", desc: "Physical defense" },
+                        { name: "Cursed Helmet", desc: "Magic damage AOE" },
+                        { name: "Oracle", desc: "HP regen dan shield boost" }
+                    ],
+                    situational: [
+                        { name: "Dominance Ice", desc: "Counter attack speed" },
+                        { name: "Antique Cuirass", desc: "Reduce physical damage" }
+                    ]
+                },
+                tips: [
+                    "Stack passive dengan eat minion/monster",
+                    "Ultimate untuk isolate target carry musuh",
+                    "Detona untuk damage dan slow AOE"
+                ]
+            },
+            "Hylos": {
+                role: "tank",
+                counters: [
+                    { name: "Karrie", reason: "True damage ignore HP besar Hylos" },
+                    { name: "Baxia", reason: "Anti-heal counter regen Hylos" },
+                    { name: "Claude", reason: "Mobility dan damage sustain" }
+                ],
+                build: {
+                    core: [
+                        { name: "Warrior Boots", desc: "Physical defense" },
+                        { name: "Cursed Helmet", desc: "Magic damage per detik" },
+                        { name: "Oracle", desc: "HP regen maksimal" }
+                    ],
+                    situational: [
+                        { name: "Dominance Ice", desc: "Counter lifesteal" },
+                        { name: "Athena's Shield", desc: "Magic defense" }
+                    ]
+                },
+                tips: [
+                    "Stack HP item untuk maximize passive",
+                    "Ultimate untuk chase dan slow musuh",
+                    "Skill 2 untuk regen dan poke"
+                ]
+            },
+            "Gatotkaca": {
+                role: "tank",
+                counters: [
+                    { name: "Karrie", reason: "True damage ignore defense Gatotkaca" },
+                    { name: "Esmeralda", reason: "Absorb shield Gatotkaca" },
+                    { name: "Diggie", reason: "Immunity CC counter ultimate Gatotkaca" }
+                ],
+                build: {
+                    core: [
+                        { name: "Warrior Boots", desc: "Physical defense" },
+                        { name: "Cursed Helmet", desc: "Magic damage AOE" },
+                        { name: "Blade Armor", desc: "Reflect damage dan physical defense" }
+                    ],
+                    situational: [
+                        { name: "Antique Cuirass", desc: "Reduce physical attack" },
+                        { name: "Oracle", desc: "Boost regen" }
+                    ]
+                },
+                tips: [
+                    "Low HP meningkatkan defense drastis",
+                    "Ultimate untuk dive backline dan lock target",
+                    "Skill 2 untuk taunt dan CC"
+                ]
+            },
+            "Baxia": {
+                role: "tank",
+                counters: [
+                    { name: "Khufra", reason: "Counter roll Baxia dengan skill 2" },
+                    { name: "Franco", reason: "Hook Baxia keluar dari posisi" },
+                    { name: "Valir", reason: "Knockback menghentikan roll Baxia" }
+                ],
+                build: {
+                    core: [
+                        { name: "Warrior Boots", desc: "Physical defense" },
+                        { name: "Cursed Helmet", desc: "Magic damage saat roll" },
+                        { name: "Dominance Ice", desc: "Counter lifesteal dan regen" }
+                    ],
+                    situational: [
+                        { name: "Oracle", desc: "HP regen" },
+                        { name: "Antique Cuirass", desc: "Reduce physical damage" }
+                    ]
+                },
+                tips: [
+                    "Anti-heal passive efektif vs sustain hero",
+                    "Roll untuk mobility dan damage",
+                    "Ultimate untuk massive slow AOE"
+                ]
+            },
+            "Uranus": {
+                role: "tank",
+                counters: [
+                    { name: "Karrie", reason: "True damage ignore regen Uranus" },
+                    { name: "Baxia", reason: "Anti-heal counter regen Uranus" },
+                    { name: "Claude", reason: "Mobility dan DPS sustained" }
+                ],
+                build: {
+                    core: [
+                        { name: "Warrior Boots", desc: "Physical defense" },
+                        { name: "Cursed Helmet", desc: "Magic damage per detik" },
+                        { name: "Oracle", desc: "Maximize HP regen dan shield" }
+                    ],
+                    situational: [
+                        { name: "Dominance Ice", desc: "Counter attack speed" },
+                        { name: "Athena's Shield", desc: "Magic defense" }
+                    ]
+                },
+                tips: [
+                    "Stack HP item untuk maximize regen",
+                    "Skill 1 untuk poke dan slow",
+                    "Passive stack shield untuk sustain"
+                ]
+            },
+            "Johnson": {
+                role: "tank",
+                counters: [
+                    { name: "Khufra", reason: "Counter car form Johnson" },
+                    { name: "Diggie", reason: "Immunity CC saat Johnson crash" },
+                    { name: "Franco", reason: "Hook Johnson keluar dari posisi" }
+                ],
+                build: {
+                    core: [
+                        { name: "Warrior Boots", desc: "Physical defense" },
+                        { name: "Cursed Helmet", desc: "Magic damage saat roaming" },
+                        { name: "Dominance Ice", desc: "Counter attack speed" }
+                    ],
+                    situational: [
+                        { name: "Antique Cuirass", desc: "Reduce physical damage" },
+                        { name: "Immortality", desc: "Second life untuk dive" }
+                    ]
+                },
+                tips: [
+                    "Ultimate dengan carry untuk gank",
+                    "Crash ke wall untuk stun lebih lama",
+                    "Skill 2 untuk shield saat engage"
+                ]
+            },
+            "Lolita": {
+                role: "tank",
+                counters: [
+                    { name: "Karrie", reason: "True damage dan basic attack menembus shield" },
+                    { name: "Valir", reason: "Knockback dan magic damage" },
+                    { name: "Lunox", reason: "High magic damage sustained" }
+                ],
+                build: {
+                    core: [
+                        { name: "Warrior Boots", desc: "Physical defense" },
+                        { name: "Cursed Helmet", desc: "Magic damage per detik" },
+                        { name: "Dominance Ice", desc: "Counter attack speed" }
+                    ],
+                    situational: [
+                        { name: "Athena's Shield", desc: "Magic defense" },
+                        { name: "Antique Cuirass", desc: "Reduce physical attack" }
+                    ]
+                },
+                tips: [
+                    "Skill 2 block semua projectile skill",
+                    "Ultimate untuk CC area dan initiate",
+                    "Perfect positioning shield sangat penting"
+                ]
+            },
+            "Belerick": {
+                role: "tank",
+                counters: [
+                    { name: "Karrie", reason: "True damage ignore HP tinggi Belerick" },
+                    { name: "Baxia", reason: "Anti-heal counter regen Belerick" },
+                    { name: "Lunox", reason: "Magic damage sustained" }
+                ],
+                build: {
+                    core: [
+                        { name: "Warrior Boots", desc: "Physical defense" },
+                        { name: "Cursed Helmet", desc: "Magic damage per detik" },
+                        { name: "Oracle", desc: "HP regen maksimal" }
+                    ],
+                    situational: [
+                        { name: "Blade Armor", desc: "Reflect damage" },
+                        { name: "Antique Cuirass", desc: "Reduce physical attack" }
+                    ]
+                },
+                tips: [
+                    "Reflect damage ke musuh yang attack",
+                    "Stack HP untuk maximize damage reflect",
+                    "Ultimate untuk taunt dan heal team"
+                ]
+            },
+
+            // FIGHTER ADDITIONAL
+            "Balmond": {
+                role: "fighter",
+                counters: [
+                    { name: "Esmeralda", reason: "Shield absorb damage Balmond" },
+                    { name: "Ruby", reason: "Lifesteal dan CC chain" },
+                    { name: "Khufra", reason: "Counter mobility Balmond" }
+                ],
+                build: {
+                    core: [
+                        { name: "Tough Boots", desc: "Reduce CC" },
+                        { name: "Bloodlust Axe", desc: "Spell vamp untuk sustain" },
+                        { name: "Oracle", desc: "Boost HP regen" }
+                    ],
+                    situational: [
+                        { name: "Blade of Despair", desc: "Extra damage" },
+                        { name: "Immortality", desc: "Second life" }
+                    ]
+                },
+                tips: [
+                    "Ultimate untuk execute low HP target",
+                    "Skill 1 untuk chase dan slow",
+                    "Stack HP untuk sustain dan damage"
+                ]
+            },
+            "Alpha": {
+                role: "fighter",
+                counters: [
+                    { name: "Khufra", reason: "Counter dash Alpha" },
+                    { name: "Esmeralda", reason: "Shield absorb damage" },
+                    { name: "Ruby", reason: "Lifesteal dan CC menang trade" }
+                ],
+                build: {
+                    core: [
+                        { name: "Tough Boots", desc: "Reduce CC" },
+                        { name: "Bloodlust Axe", desc: "Spell vamp" },
+                        { name: "Blade of Despair", desc: "Physical damage tinggi" }
+                    ],
+                    situational: [
+                        { name: "War Axe", desc: "Penetration stack" },
+                        { name: "Immortality", desc: "Second life" }
+                    ]
+                },
+                tips: [
+                    "Skill 2 untuk engage dan mark target",
+                    "Ultimate untuk lock dan burst",
+                    "Beta untuk shield dan poke"
+                ]
+            },
+            "Alucard": {
+                role: "fighter",
+                counters: [
+                    { name: "Khufra", reason: "Counter dash Alucard sepenuhnya" },
+                    { name: "Ruby", reason: "CC chain dan lifesteal lebih baik" },
+                    { name: "Minsitthar", reason: "Ultimate disable dash Alucard" }
+                ],
+                build: {
+                    core: [
+                        { name: "Warrior Boots", desc: "Physical defense" },
+                        { name: "Bloodlust Axe", desc: "Spell vamp untuk sustain" },
+                        { name: "Blade of Despair", desc: "Physical damage tinggi" }
+                    ],
+                    situational: [
+                        { name: "Hunter Strike", desc: "Burst dan movement speed" },
+                        { name: "Immortality", desc: "Second life untuk dive" }
+                    ]
+                },
+                tips: [
+                    "Stack lifesteal untuk sustain fight",
+                    "Skill 1 untuk chase dan reposition",
+                    "Ultimate untuk burst damage maksimal"
+                ]
+            },
+            "Ruby": {
+                role: "fighter",
+                counters: [
+                    { name: "Esmeralda", reason: "Shield absorb damage Ruby" },
+                    { name: "Karrie", reason: "True damage dan kiting" },
+                    { name: "Baxia", reason: "Anti-heal counter lifesteal Ruby" }
+                ],
+                build: {
+                    core: [
+                        { name: "Tough Boots", desc: "Reduce CC" },
+                        { name: "Haas's Claws", desc: "Physical lifesteal tinggi" },
+                        { name: "Endless Battle", desc: "True damage dan sustain" }
+                    ],
+                    situational: [
+                        { name: "Oracle", desc: "Boost lifesteal effect" },
+                        { name: "Blade of Despair", desc: "Extra damage" }
+                    ]
+                },
+                tips: [
+                    "CC chain dengan skill 1 dan skill 2",
+                    "Ultimate untuk pull enemy dan teamfight",
+                    "Lifesteal build untuk sustain maksimal"
+                ]
+            },
+            "Zilong": {
+                role: "fighter",
+                counters: [
+                    { name: "Khufra", reason: "Counter dash Zilong" },
+                    { name: "Ruby", reason: "CC chain menghentikan Zilong" },
+                    { name: "Franco", reason: "Hook Zilong saat ulti" }
+                ],
+                build: {
+                    core: [
+                        { name: "Warrior Boots", desc: "Physical defense" },
+                        { name: "Endless Battle", desc: "True damage" },
+                        { name: "Blade of Despair", desc: "Physical damage tinggi" }
+                    ],
+                    situational: [
+                        { name: "Corrosion Scythe", desc: "Slow untuk chase" },
+                        { name: "Immortality", desc: "Second life" }
+                    ]
+                },
+                tips: [
+                    "Ultimate untuk single target burst",
+                    "Skill 2 untuk dash dan flip target",
+                    "Split push efektif dengan attack speed"
+                ]
+            },
+            "Hilda": {
+                role: "fighter",
+                counters: [
+                    { name: "Esmeralda", reason: "Shield absorb damage Hilda" },
+                    { name: "Karrie", reason: "True damage ignore defense" },
+                    { name: "Valir", reason: "Knockback mencegah Hilda engage" }
+                ],
+                build: {
+                    core: [
+                        { name: "Tough Boots", desc: "Reduce CC" },
+                        { name: "Blade of Despair", desc: "Physical damage" },
+                        { name: "Hunter Strike", desc: "Burst dan mobility" }
+                    ],
+                    situational: [
+                        { name: "Endless Battle", desc: "True damage" },
+                        { name: "Immortality", desc: "Second life" }
+                    ]
+                },
+                tips: [
+                    "Skill 1 untuk slow dan chase",
+                    "Passive berikan regen di bush",
+                    "Ultimate untuk jump dan damage AOE"
+                ]
+            },
+            "Argus": {
+                role: "fighter",
+                counters: [
+                    { name: "Diggie", reason: "Kite Argus sampai ulti habis" },
+                    { name: "Valir", reason: "Knockback untuk maintain distance" },
+                    { name: "Karrie", reason: "True damage dan kiting" }
+                ],
+                build: {
+                    core: [
+                        { name: "Warrior Boots", desc: "Physical defense" },
+                        { name: "Haas's Claws", desc: "Lifesteal tinggi" },
+                        { name: "Blade of Despair", desc: "Physical damage" }
+                    ],
+                    situational: [
+                        { name: "Endless Battle", desc: "True damage" },
+                        { name: "Corrosion Scythe", desc: "Slow untuk chase" }
+                    ]
+                },
+                tips: [
+                    "Ultimate untuk immune death 5 detik",
+                    "Timing ultimate sangat krusial",
+                    "Stack attack speed untuk DPS"
+                ]
+            },
+            "Jawhead": {
+                role: "fighter",
+                counters: [
+                    { name: "Diggie", reason: "Immune throw dari Jawhead" },
+                    { name: "Esmeralda", reason: "Shield absorb damage" },
+                    { name: "Khufra", reason: "Counter dash dan lock" }
+                ],
+                build: {
+                    core: [
+                        { name: "Tough Boots", desc: "Reduce CC" },
+                        { name: "Bloodlust Axe", desc: "Spell vamp" },
+                        { name: "Blade of Despair", desc: "Physical damage" }
+                    ],
+                    situational: [
+                        { name: "Thunder Belt", desc: "HP dan true damage" },
+                        { name: "Immortality", desc: "Second life" }
+                    ]
+                },
+                tips: [
+                    "Throw enemy ke tower atau ke tim",
+                    "Skill 2 untuk mobility dan damage",
+                    "Ultimate untuk burst damage tinggi"
+                ]
+            },
+            "Thamuz": {
+                role: "fighter",
+                counters: [
+                    { name: "Karrie", reason: "True damage ignore HP tinggi" },
+                    { name: "Baxia", reason: "Anti-heal counter regen Thamuz" },
+                    { name: "Khufra", reason: "Counter mobility dan lock" }
+                ],
+                build: {
+                    core: [
+                        { name: "Tough Boots", desc: "Reduce CC" },
+                        { name: "Bloodlust Axe", desc: "Spell vamp untuk sustain" },
+                        { name: "Oracle", desc: "Boost HP regen" }
+                    ],
+                    situational: [
+                        { name: "Blade of Despair", desc: "Extra damage" },
+                        { name: "Immortality", desc: "Second life" }
+                    ]
+                },
+                tips: [
+                    "Skill 1 untuk poke dan regen",
+                    "Ultimate untuk sustain fight maksimal",
+                    "Low HP meningkatkan damage drastis"
+                ]
+            },
+            "Guinevere": {
+                role: "fighter",
+                counters: [
+                    { name: "Diggie", reason: "Immunity CC counter ultimate" },
+                    { name: "Khufra", reason: "Counter jump Guinevere" },
+                    { name: "Natalia", reason: "Silence mencegah combo" }
+                ],
+                build: {
+                    core: [
+                        { name: "Arcane Boots", desc: "Magic penetration" },
+                        { name: "Clock of Destiny", desc: "HP dan magic power" },
+                        { name: "Holy Crystal", desc: "Magic power tinggi" }
+                    ],
+                    situational: [
+                        { name: "Concentrated Energy", desc: "Spell vamp" },
+                        { name: "Divine Glaive", desc: "Penetration" }
+                    ]
+                },
+                tips: [
+                    "Combo: Skill 2 jump → Skill 1 → Ultimate",
+                    "Target squishy hero yang berkumpul",
+                    "Timing jump sangat penting"
+                ]
+            },
+            "Silvanna": {
+                role: "fighter",
+                counters: [
+                    { name: "Diggie", reason: "Purify keluar dari ultimate" },
+                    { name: "Karrie", reason: "True damage dalam circle ultimate" },
+                    { name: "Esmeralda", reason: "Shield absorb damage" }
+                ],
+                build: {
+                    core: [
+                        { name: "Tough Boots", desc: "Reduce CC" },
+                        { name: "Bloodlust Axe", desc: "Spell vamp" },
+                        { name: "Blade of Despair", desc: "Physical damage" }
+                    ],
+                    situational: [
+                        { name: "War Axe", desc: "Penetration stack" },
+                        { name: "Immortality", desc: "Second life" }
+                    ]
+                },
+                tips: [
+                    "Ultimate untuk trap multiple enemies",
+                    "Skill 2 untuk dash dan shield",
+                    "Combo dengan mage untuk burst"
+                ]
+            },
+            "X.Borg": {
+                role: "fighter",
+                counters: [
+                    { name: "Karrie", reason: "True damage ignore armor" },
+                    { name: "Baxia", reason: "Anti-heal counter regen" },
+                    { name: "Valir", reason: "Knockback untuk maintain distance" }
+                ],
+                build: {
+                    core: [
+                        { name: "Tough Boots", desc: "Reduce CC" },
+                        { name: "Bloodlust Axe", desc: "Spell vamp" },
+                        { name: "Oracle", desc: "Boost HP regen armor" }
+                    ],
+                    situational: [
+                        { name: "Blade of Despair", desc: "Extra damage" },
+                        { name: "Immortality", desc: "Second life" }
+                    ]
+                },
+                tips: [
+                    "Armor memberikan extra HP bar",
+                    "Ultimate untuk massive damage AOE",
+                    "Skill 1 untuk poke dan sustain"
+                ]
+            },
+            "Dyrroth": {
+                role: "fighter",
+                counters: [
+                    { name: "Khufra", reason: "Counter dash Dyrroth" },
+                    { name: "Esmeralda", reason: "Shield absorb damage" },
+                    { name: "Ruby", reason: "CC chain dan lifesteal" }
+                ],
+                build: {
+                    core: [
+                        { name: "Warrior Boots", desc: "Physical defense" },
+                        { name: "Bloodlust Axe", desc: "Spell vamp" },
+                        { name: "Blade of Despair", desc: "Physical damage" }
+                    ],
+                    situational: [
+                        { name: "Hunter Strike", desc: "Burst damage" },
+                        { name: "Immortality", desc: "Second life" }
+                    ]
+                },
+                tips: [
+                    "Penetrate physical defense dengan passive",
+                    "Skill 1 untuk poke dan slow",
+                    "Ultimate untuk dash dan penetration"
+                ]
+            },
+            "Badang": {
+                role: "fighter",
+                counters: [
+                    { name: "Diggie", reason: "Immunity CC dari combo Badang" },
+                    { name: "Esmeralda", reason: "Shield absorb damage" },
+                    { name: "Karrie", reason: "True damage dan kiting" }
+                ],
+                build: {
+                    core: [
+                        { name: "Tough Boots", desc: "Reduce CC" },
+                        { name: "Bloodlust Axe", desc: "Spell vamp" },
+                        { name: "Blade of Despair", desc: "Physical damage" }
+                    ],
+                    situational: [
+                        { name: "War Axe", desc: "Penetration" },
+                        { name: "Immortality", desc: "Second life" }
+                    ]
+                },
+                tips: [
+                    "Ultimate untuk trap di wall dan burst",
+                    "Skill 1 untuk poke dan shield",
+                    "Combo: Skill 2 → Ultimate → Skill 1"
+                ]
+            },
+            "Khaleed": {
+                role: "fighter",
+                counters: [
+                    { name: "Esmeralda", reason: "Shield absorb damage Khaleed" },
+                    { name: "Karrie", reason: "True damage ignore defense" },
+                    { name: "Baxia", reason: "Anti-heal counter regen" }
+                ],
+                build: {
+                    core: [
+                        { name: "Tough Boots", desc: "Reduce CC" },
+                        { name: "Bloodlust Axe", desc: "Spell vamp" },
+                        { name: "Oracle", desc: "HP regen boost" }
+                    ],
+                    situational: [
+                        { name: "Blade of Despair", desc: "Extra damage" },
+                        { name: "Immortality", desc: "Second life" }
+                    ]
+                },
+                tips: [
+                    "Skill 1 untuk poke dari jarak aman",
+                    "Passive memberikan shield di sand",
+                    "Ultimate untuk regen dan damage AOE"
+                ]
+            },
+            "Phoveus": {
+                role: "fighter",
+                counters: [
+                    { name: "Minsitthar", reason: "Ultimate disable dash yang trigger passive" },
+                    { name: "Esmeralda", reason: "Shield absorb damage" },
+                    { name: "Karrie", reason: "True damage tanpa dash" }
+                ],
+                build: {
+                    core: [
+                        { name: "Tough Boots", desc: "Reduce CC" },
+                        { name: "Bloodlust Axe", desc: "Spell vamp" },
+                        { name: "Oracle", desc: "HP regen" }
+                    ],
+                    situational: [
+                        { name: "Blade of Despair", desc: "Extra damage" },
+                        { name: "Immortality", desc: "Second life" }
+                    ]
+                },
+                tips: [
+                    "Counter hero dengan banyak dash/blink",
+                    "Ultimate untuk teleport ke dash hero",
+                    "Skill 2 untuk shield dan slow"
+                ]
+            },
+            "Yu Zhong": {
+                role: "fighter",
+                counters: [
+                    { name: "Karrie", reason: "True damage ignore HP tinggi" },
+                    { name: "Baxia", reason: "Anti-heal counter regen" },
+                    { name: "Khufra", reason: "Counter dash dan lock" }
+                ],
+                build: {
+                    core: [
+                        { name: "Tough Boots", desc: "Reduce CC" },
+                        { name: "Bloodlust Axe", desc: "Spell vamp untuk sustain" },
+                        { name: "Oracle", desc: "Boost HP regen" }
+                    ],
+                    situational: [
+                        { name: "Blade of Despair", desc: "Extra damage" },
+                        { name: "Immortality", desc: "Second life dalam ulti" }
+                    ]
+                },
+                tips: [
+                    "Stack passive SHA untuk damage dan heal",
+                    "Ultimate untuk transform dan AOE damage",
+                    "Skill 2 untuk poke dan shield"
+                ]
+            },
+            "Martis": {
+                role: "fighter",
+                counters: [
+                    { name: "Esmeralda", reason: "Shield absorb damage Martis" },
+                    { name: "Diggie", reason: "Immunity CC dari ultimate" },
+                    { name: "Karrie", reason: "True damage dan kiting" }
+                ],
+                build: {
+                    core: [
+                        { name: "Warrior Boots", desc: "Physical defense" },
+                        { name: "Bloodlust Axe", desc: "Spell vamp" },
+                        { name: "Blade of Despair", desc: "Physical damage" }
+                    ],
+                    situational: [
+                        { name: "Hunter Strike", desc: "Burst damage" },
+                        { name: "Immortality", desc: "Second life" }
+                    ]
+                },
+                tips: [
+                    "Ultimate untuk CC dan suppress target",
+                    "Skill 1 untuk dash dan immune CC",
+                    "Combo: Skill 2 → Skill 1 → Ultimate"
+                ]
+            },
+            "Aldous": {
+                role: "fighter",
+                counters: [
+                    { name: "Diggie", reason: "Purify dari ultimate Aldous" },
+                    { name: "Valir", reason: "Knockback mencegah Aldous punch" },
+                    { name: "Khufra", reason: "Counter ultimate flight" }
+                ],
+                build: {
+                    core: [
+                        { name: "Warrior Boots", desc: "Physical defense" },
+                        { name: "Endless Battle", desc: "True damage" },
+                        { name: "Blade of Despair", desc: "Physical damage" }
+                    ],
+                    situational: [
+                        { name: "Hunter Strike", desc: "Burst damage" },
+                        { name: "Immortality", desc: "Second life" }
+                    ]
+                },
+                tips: [
+                    "Stack skill 1 untuk damage punch tinggi",
+                    "Ultimate untuk teleport ke target",
+                    "Late game menjadi monster dengan stack"
+                ]
+            },
+            "Leomord": {
+                role: "fighter",
+                counters: [
+                    { name: "Karrie", reason: "True damage ignore defense horse" },
+                    { name: "Khufra", reason: "Counter dash dan lock" },
+                    { name: "Esmeralda", reason: "Shield absorb damage" }
+                ],
+                build: {
+                    core: [
+                        { name: "Tough Boots", desc: "Reduce CC" },
+                        { name: "Bloodlust Axe", desc: "Spell vamp" },
+                        { name: "Blade of Despair", desc: "Physical damage" }
+                    ],
+                    situational: [
+                        { name: "War Axe", desc: "Penetration" },
+                        { name: "Immortality", desc: "Second life" }
+                    ]
+                },
+                tips: [
+                    "Ultimate untuk summon horse dan mobility",
+                    "Skill 1 untuk poke dan slow",
+                    "Di horse, damage dan defense meningkat"
+                ]
+            },
+            "Minsitthar": {
+                role: "fighter",
+                counters: [
+                    { name: "Karrie", reason: "True damage ignore defense" },
+                    { name: "Esmeralda", reason: "Shield absorb damage" },
+                    { name: "Lunox", reason: "Magic damage sustained" }
+                ],
+                build: {
+                    core: [
+                        { name: "Tough Boots", desc: "Reduce CC" },
+                        { name: "Bloodlust Axe", desc: "Spell vamp" },
+                        { name: "Blade of Despair", desc: "Physical damage" }
+                    ],
+                    situational: [
+                        { name: "War Axe", desc: "Penetration" },
+                        { name: "Immortality", desc: "Second life" }
+                    ]
+                },
+                tips: [
+                    "Ultimate disable semua dash/blink",
+                    "Counter hero mobility tinggi",
+                    "Skill 2 untuk CC dan damage"
+                ]
+            },
+
+            // ASSASSIN ADDITIONAL
+            "Karina": {
+                role: "assassin",
+                counters: [
+                    { name: "Saber", reason: "Lock Karina dan burst damage" },
+                    { name: "Helcurt", reason: "Silence mencegah Karina combo" },
+                    { name: "Natalia", reason: "Silence dan burst lebih cepat" }
+                ],
+                build: {
+                    core: [
+                        { name: "Arcane Boots", desc: "Magic penetration" },
+                        { name: "Calamity Reaper", desc: "True damage proc" },
+                        { name: "Holy Crystal", desc: "Magic power tinggi" }
+                    ],
+                    situational: [
+                        { name: "Divine Glaive", desc: "Extra penetration" },
+                        { name: "Blood Wings", desc: "Shield dan magic power" }
+                    ]
+                },
+                tips: [
+                    "Target low HP untuk reset ultimate",
+                    "Skill 1 untuk invisible dan burst",
+                    "Combo: Skill 1 → Skill 2 → Ultimate"
+                ]
+            },
+            "Helcurt": {
+                role: "assassin",
+                counters: [
+                    { name: "Saber", reason: "Lock Helcurt dan burst" },
+                    { name: "Diggie", reason: "Vision dalam darkness" },
+                    { name: "Lancelot", reason: "Immune damage dan mobility" }
+                ],
+                build: {
+                    core: [
+                        { name: "Warrior Boots", desc: "Physical defense" },
+                        { name: "Blade of Despair", desc: "Physical damage tinggi" },
+                        { name: "Hunter Strike", desc: "Burst damage" }
+                    ],
+                    situational: [
+                        { name: "Malefic Roar", desc: "Penetration" },
+                        { name: "Immortality", desc: "Second life" }
+                    ]
+                },
+                tips: [
+                    "Ultimate untuk silence dan darkness global",
+                    "Skill 1 untuk poke dan silence",
+                    "Target mage dan marksman saat darkness"
+                ]
+            },
+            "Natalia": {
+                role: "assassin",
+                counters: [
+                    { name: "Saber", reason: "Lock Natalia saat invisible" },
+                    { name: "Eudora", reason: "Stun dan burst damage" },
+                    { name: "Helcurt", reason: "Silence balik dan damage" }
+                ],
+                build: {
+                    core: [
+                        { name: "Warrior Boots", desc: "Physical defense" },
+                        { name: "Blade of Despair", desc: "Physical damage" },
+                        { name: "Hunter Strike", desc: "Burst tinggi" }
+                    ],
+                    situational: [
+                        { name: "Endless Battle", desc: "True damage" },
+                        { name: "Immortality", desc: "Second life" }
+                    ]
+                },
+                tips: [
+                    "Invisible untuk surprise attack",
+                    "Basic attack dari bush untuk silence",
+                    "Target squishy hero yang sendirian"
+                ]
+            },
+            "Gusion": {
+                role: "assassin",
+                counters: [
+                    { name: "Saber", reason: "Lock dan burst Gusion" },
+                    { name: "Helcurt", reason: "Silence mencegah combo" },
+                    { name: "Diggie", reason: "Immunity CC dari combo" }
+                ],
+                build: {
+                    core: [
+                        { name: "Arcane Boots", desc: "Magic penetration" },
+                        { name: "Calamity Reaper", desc: "True damage proc" },
+                        { name: "Holy Crystal", desc: "Magic power" }
+                    ],
+                    situational: [
+                        { name: "Divine Glaive", desc: "Penetration" },
+                        { name: "Blood Wings", desc: "Shield" }
+                    ]
+                },
+                tips: [
+                    "Combo: Skill 1 → Skill 2 → Ultimate → Skill 2 recall",
+                    "Master dagger positioning untuk burst maksimal",
+                    "Target squishy hero sendirian"
+                ]
+            },
+            "Ling": {
+                role: "assassin",
+                counters: [
+                    { name: "Saber", reason: "Lock Ling saat turun dari wall" },
+                    { name: "Eudora", reason: "Stun dan burst" },
+                    { name: "Karina", reason: "Chase Ling dengan reset ultimate" }
+                ],
+                build: {
+                    core: [
+                        { name: "Warrior Boots", desc: "Physical defense" },
+                        { name: "Blade of Despair", desc: "Physical damage" },
+                        { name: "Hunter Strike", desc: "Burst tinggi" }
+                    ],
+                    situational: [
+                        { name: "Endless Battle", desc: "True damage" },
+                        { name: "Immortality", desc: "Second life" }
+                    ]
+                },
+                tips: [
+                    "Gunakan wall untuk mobility dan escape",
+                    "Ultimate untuk massive damage AOE",
+                    "Energy management penting untuk stay di wall"
+                ]
+            },
+            "Hanzo": {
+                role: "assassin",
+                counters: [
+                    { name: "Natalia", reason: "Find dan kill body Hanzo yang hide" },
+                    { name: "Saber", reason: "Lock demon Hanzo" },
+                    { name: "Karina", reason: "Burst damage tinggi" }
+                ],
+                build: {
+                    core: [
+                        { name: "Warrior Boots", desc: "Physical defense" },
+                        { name: "Blade of Despair", desc: "Physical damage" },
+                        { name: "Hunter Strike", desc: "Burst damage" }
+                    ],
+                    situational: [
+                        { name: "Endless Battle", desc: "True damage" },
+                        { name: "Malefic Roar", desc: "Penetration" }
+                    ]
+                },
+                tips: [
+                    "Ultimate untuk control demon dari jauh",
+                    "Hide body di tempat aman",
+                    "Skill 1 untuk poke dan stack passive"
+                ]
+            },
+            "Selena": {
+                role: "assassin",
+                counters: [
+                    { name: "Diggie", reason: "Vision trap dan immunity stun" },
+                    { name: "Natalia", reason: "Silence mencegah form change" },
+                    { name: "Lancelot", reason: "Immune stun dan burst balik" }
+                ],
+                build: {
+                    core: [
+                        { name: "Arcane Boots", desc: "Magic penetration" },
+                        { name: "Clock of Destiny", desc: "Magic power dan HP" },
+                        { name: "Lightning Truncheon", desc: "Burst damage" }
+                    ],
+                    situational: [
+                        { name: "Holy Crystal", desc: "Magic power" },
+                        { name: "Divine Glaive", desc: "Penetration" }
+                    ]
+                },
+                tips: [
+                    "Elven form untuk poke dan stun",
+                    "Abyssal form untuk burst damage",
+                    "Combo: Skill 1 elven → Skill 2 → Change form → Skill 1 abyssal"
+                ]
+            },
+            "Benedetta": {
+                role: "assassin",
+                counters: [
+                    { name: "Saber", reason: "Lock Benedetta dan burst" },
+                    { name: "Eudora", reason: "Stun mencegah dash" },
+                    { name: "Khufra", reason: "Counter dash Benedetta" }
+                ],
+                build: {
+                    core: [
+                        { name: "Tough Boots", desc: "Reduce CC" },
+                        { name: "War Axe", desc: "Physical attack stack" },
+                        { name: "Hunter Strike", desc: "Burst damage" }
+                    ],
+                    situational: [
+                        { name: "Blade of Despair", desc: "Extra damage" },
+                        { name: "Malefic Roar", desc: "Penetration" }
+                    ]
+                },
+                tips: [
+                    "Skill 1 untuk dash dan immune",
+                    "Ultimate untuk massive damage slash",
+                    "Dash timing penting untuk dodge skill"
+                ]
+            },
+            "Joy": {
+                role: "assassin",
+                counters: [
+                    { name: "Saber", reason: "Lock Joy dan burst" },
+                    { name: "Helcurt", reason: "Silence mencegah dash" },
+                    { name: "Khufra", reason: "Counter dash Joy" }
+                ],
+                build: {
+                    core: [
+                        { name: "Arcane Boots", desc: "Magic penetration" },
+                        { name: "Calamity Reaper", desc: "True damage proc" },
+                        { name: "Holy Crystal", desc: "Magic power" }
+                    ],
+                    situational: [
+                        { name: "Divine Glaive", desc: "Penetration" },
+                        { name: "Blood Wings", desc: "Shield" }
+                    ]
+                },
+                tips: [
+                    "Passive untuk mobility tinggi",
+                    "Skill 2 untuk burst dan mark",
+                    "Ultimate untuk chase atau escape"
+                ]
+            },
+
+            // MAGE ADDITIONAL
+            "Cyclops": {
+                role: "mage",
+                counters: [
+                    { name: "Natalia", reason: "Silence dan burst Cyclops" },
+                    { name: "Lancelot", reason: "Immune damage dan mobility" },
+                    { name: "Saber", reason: "Lock dan burst" }
+                ],
+                build: {
+                    core: [
+                        { name: "Arcane Boots", desc: "Magic penetration" },
+                        { name: "Clock of Destiny", desc: "Magic power dan HP" },
+                        { name: "Lightning Truncheon", desc: "Burst damage" }
+                    ],
+                    situational: [
+                        { name: "Holy Crystal", desc: "Extra magic power" },
+                        { name: "Divine Glaive", desc: "Penetration" }
+                    ]
+                },
+                tips: [
+                    "Skill 1 untuk poke dan reduce cooldown",
+                    "Skill 2 untuk CC dan slow",
+                    "Ultimate untuk burst damage"
+                ]
+            },
+            "Alice": {
+                role: "mage",
+                counters: [
+                    { name: "Baxia", reason: "Anti-heal counter regen Alice" },
+                    { name: "Karrie", reason: "True damage ignore HP tinggi" },
+                    { name: "Esmeralda", reason: "Absorb shield Alice" }
+                ],
+                build: {
+                    core: [
+                        { name: "Arcane Boots", desc: "Magic penetration" },
+                        { name: "Clock of Destiny", desc: "HP dan magic power" },
+                        { name: "Concentrated Energy", desc: "Spell vamp" }
+                    ],
+                    situational: [
+                        { name: "Oracle", desc: "Boost regen" },
+                        { name: "Holy Crystal", desc: "Magic power" }
+                    ]
+                },
+                tips: [
+                    "Stack passive dengan skill 1",
+                    "Ultimate untuk sustain fight",
+                    "Skill 2 untuk immobilize dan damage"
+                ]
+            },
+            "Nana": {
+                role: "mage",
+                counters: [
+                    { name: "Diggie", reason: "Immunity molina transform" },
+                    { name: "Natalia", reason: "Silence dan burst Nana" },
+                    { name: "Lancelot", reason: "Dash dodge molina" }
+                ],
+                build: {
+                    core: [
+                        { name: "Arcane Boots", desc: "Magic penetration" },
+                        { name: "Clock of Destiny", desc: "Magic power" },
+                        { name: "Holy Crystal", desc: "Burst damage" }
+                    ],
+                    situational: [
+                        { name: "Divine Glaive", desc: "Penetration" },
+                        { name: "Immortality", desc: "Second life" }
+                    ]
+                },
+                tips: [
+                    "Molina untuk interrupt channeling skills",
+                    "Skill 2 untuk poke dan slow",
+                    "Ultimate untuk massive damage AOE"
+                ]
+            },
+            "Valir": {
+                role: "mage",
+                counters: [
+                    { name: "Natalia", reason: "Silence mencegah knockback" },
+                    { name: "Lancelot", reason: "Dash menembus knockback" },
+                    { name: "Fanny", reason: "Cable mobility menghindari skill" }
+                ],
+                build: {
+                    core: [
+                        { name: "Arcane Boots", desc: "Magic penetration" },
+                        { name: "Clock of Destiny", desc: "Magic power" },
+                        { name: "Ice Queen Wand", desc: "Slow effect" }
+                    ],
+                    situational: [
+                        { name: "Holy Crystal", desc: "Magic power" },
+                        { name: "Divine Glaive", desc: "Penetration" }
+                    ]
+                },
+                tips: [
+                    "Skill 1 untuk knockback dan poke",
+                    "Ultimate untuk massive AOE damage",
+                    "Position baik untuk knockback ke wall"
+                ]
+            },
+            "Aurora": {
+                role: "mage",
+                counters: [
+                    { name: "Lancelot", reason: "Immune freeze dan burst" },
+                    { name: "Diggie", reason: "Immunity freeze" },
+                    { name: "Natalia", reason: "Silence sebelum Aurora combo" }
+                ],
+                build: {
+                    core: [
+                        { name: "Arcane Boots", desc: "Magic penetration" },
+                        { name: "Clock of Destiny", desc: "Magic power" },
+                        { name: "Holy Crystal", desc: "Burst damage" }
+                    ],
+                    situational: [
+                        { name: "Divine Glaive", desc: "Penetration" },
+                        { name: "Blood Wings", desc: "Shield" }
+                    ]
+                },
+                tips: [
+                    "Stack passive untuk freeze",
+                    "Combo: Skill 2 → Skill 1 → Ultimate",
+                    "Ultimate untuk freeze multiple enemies"
+                ]
+            },
+            "Chang'e": {
+                role: "mage",
+                counters: [
+                    { name: "Natalia", reason: "Silence dan burst Chang'e" },
+                    { name: "Lancelot", reason: "High mobility dive Chang'e" },
+                    { name: "Fanny", reason: "Chase Chang'e dengan cable" }
+                ],
+                build: {
+                    core: [
+                        { name: "Arcane Boots", desc: "Magic penetration" },
+                        { name: "Clock of Destiny", desc: "Magic power" },
+                        { name: "Holy Crystal", desc: "Burst damage tinggi" }
+                    ],
+                    situational: [
+                        { name: "Divine Glaive", desc: "Penetration" },
+                        { name: "Immortality", desc: "Second life" }
+                    ]
+                },
+                tips: [
+                    "Skill 2 untuk movement speed dan shield",
+                    "Ultimate untuk spam magic damage",
+                    "Stay mobile dengan passive movement"
+                ]
+            },
+            "Cecilion": {
+                role: "mage",
+                counters: [
+                    { name: "Natalia", reason: "Silence dan burst sebelum stack" },
+                    { name: "Lancelot", reason: "Dive Cecilion dengan mobility" },
+                    { name: "Fanny", reason: "High mobility kill Cecilion" }
+                ],
+                build: {
+                    core: [
+                        { name: "Arcane Boots", desc: "Magic penetration" },
+                        { name: "Clock of Destiny", desc: "Magic power stack" },
+                        { name: "Lightning Truncheon", desc: "Burst damage" }
+                    ],
+                    situational: [
+                        { name: "Holy Crystal", desc: "Magic power" },
+                        { name: "Divine Glaive", desc: "Penetration" }
+                    ]
+                },
+                tips: [
+                    "Stack passive dengan Carmilla untuk faster stack",
+                    "Late game menjadi monster damage",
+                    "Skill 1 untuk poke dan stack"
+                ]
+            },
+            "Lylia": {
+                role: "mage",
+                counters: [
+                    { name: "Natalia", reason: "Silence mencegah ultimate escape" },
+                    { name: "Saber", reason: "Lock dan burst Lylia" },
+                    { name: "Lancelot", reason: "Chase Lylia dengan mobility" }
+                ],
+                build: {
+                    core: [
+                        { name: "Arcane Boots", desc: "Magic penetration" },
+                        { name: "Clock of Destiny", desc: "Magic power" },
+                        { name: "Holy Crystal", desc: "Burst damage" }
+                    ],
+                    situational: [
+                        { name: "Lightning Truncheon", desc: "Extra burst" },
+                        { name: "Divine Glaive", desc: "Penetration" }
+                    ]
+                },
+                tips: [
+                    "Gloom untuk zone control dan poke",
+                    "Ultimate untuk teleport back dan escape",
+                    "Skill 2 untuk damage dan slow"
+                ]
+            },
+            "Harley": {
+                role: "mage",
+                counters: [
+                    { name: "Natalia", reason: "Silence mencegah escape Harley" },
+                    { name: "Saber", reason: "Lock dan burst Harley" },
+                    { name: "Lancelot", reason: "Mobility chase Harley" }
+                ],
+                build: {
+                    core: [
+                        { name: "Arcane Boots", desc: "Magic penetration" },
+                        { name: "Clock of Destiny", desc: "Magic power" },
+                        { name: "Lightning Truncheon", desc: "Burst damage" }
+                    ],
+                    situational: [
+                        { name: "Holy Crystal", desc: "Extra burst" },
+                        { name: "Blood Wings", desc: "Shield" }
+                    ]
+                },
+                tips: [
+                    "Skill 2 untuk blink ke card position",
+                    "Combo: Skill 1 → Ultimate → Skill 2 escape",
+                    "Hat untuk poke dan vision"
+                ]
+            },
+            "Lunox": {
+                role: "mage",
+                counters: [
+                    { name: "Natalia", reason: "Silence mencegah ultimate immune" },
+                    { name: "Saber", reason: "Lock Lunox dengan burst" },
+                    { name: "Helcurt", reason: "Silence dan darkness" }
+                ],
+                build: {
+                    core: [
+                        { name: "Arcane Boots", desc: "Magic penetration" },
+                        { name: "Clock of Destiny", desc: "Magic power" },
+                        { name: "Holy Crystal", desc: "Burst damage" }
+                    ],
+                    situational: [
+                        { name: "Divine Glaive", desc: "Penetration" },
+                        { name: "Blood Wings", desc: "Shield" }
+                    ]
+                },
+                tips: [
+                    "Balance light dan dark untuk damage",
+                    "Ultimate light untuk immune physical",
+                    "Ultimate dark untuk immune magic"
+                ]
+            },
+            "Yve": {
+                role: "mage",
+                counters: [
+                    { name: "Natalia", reason: "Silence interrupt ultimate Yve" },
+                    { name: "Lancelot", reason: "Dash keluar dari ultimate zone" },
+                    { name: "Fanny", reason: "Cable mobility keluar zone" }
+                ],
+                build: {
+                    core: [
+                        { name: "Arcane Boots", desc: "Magic penetration" },
+                        { name: "Clock of Destiny", desc: "Magic power" },
+                        { name: "Lightning Truncheon", desc: "Burst damage" }
+                    ],
+                    situational: [
+                        { name: "Holy Crystal", desc: "Magic power" },
+                        { name: "Divine Glaive", desc: "Penetration" }
+                    ]
+                },
+                tips: [
+                    "Ultimate untuk zone control teamfight",
+                    "Skill 1 untuk poke dan slow",
+                    "Positioning ultimate sangat penting"
+                ]
+            },
+            "Vexana": {
+                role: "mage",
+                counters: [
+                    { name: "Diggie", reason: "Immunity CC dari Vexana" },
+                    { name: "Natalia", reason: "Silence dan burst Vexana" },
+                    { name: "Lancelot", reason: "Mobility dan burst" }
+                ],
+                build: {
+                    core: [
+                        { name: "Arcane Boots", desc: "Magic penetration" },
+                        { name: "Clock of Destiny", desc: "Magic power" },
+                        { name: "Holy Crystal", desc: "Burst damage" }
+                    ],
+                    situational: [
+                        { name: "Divine Glaive", desc: "Penetration" },
+                        { name: "Blood Wings", desc: "Shield" }
+                    ]
+                },
+                tips: [
+                    "Ultimate untuk summon puppet dari killed hero",
+                    "Skill 1 untuk CC dan damage",
+                    "Focus kill carry untuk strong puppet"
+                ]
+            },
+            "Odette": {
+                role: "mage",
+                counters: [
+                    { name: "Diggie", reason: "Immunity ultimate Odette" },
+                    { name: "Natalia", reason: "Silence interrupt channeling" },
+                    { name: "Franco", reason: "Hook interrupt ultimate" }
+                ],
+                build: {
+                    core: [
+                        { name: "Arcane Boots", desc: "Magic penetration" },
+                        { name: "Clock of Destiny", desc: "Magic power" },
+                        { name: "Holy Crystal", desc: "Burst damage" }
+                    ],
+                    situational: [
+                        { name: "Divine Glaive", desc: "Penetration" },
+                        { name: "Immortality", desc: "Second life" }
+                    ]
+                },
+                tips: [
+                    "Ultimate untuk massive AOE damage",
+                    "Combo dengan Johnson untuk surprise ultimate",
+                    "Positioning penting, stay protected"
+                ]
+            },
+            "Gord": {
+                role: "mage",
+                counters: [
+                    { name: "Natalia", reason: "Silence dan burst Gord" },
+                    { name: "Lancelot", reason: "Dash dodge ultimate laser" },
+                    { name: "Fanny", reason: "Cable mobility avoid damage" }
+                ],
+                build: {
+                    core: [
+                        { name: "Arcane Boots", desc: "Magic penetration" },
+                        { name: "Clock of Destiny", desc: "Magic power" },
+                        { name: "Holy Crystal", desc: "Burst damage tinggi" }
+                    ],
+                    situational: [
+                        { name: "Divine Glaive", desc: "Penetration" },
+                        { name: "Immortality", desc: "Second life" }
+                    ]
+                },
+                tips: [
+                    "Ultimate untuk burst damage laser",
+                    "Skill 1 untuk poke dan slow",
+                    "Position untuk laser straight line"
+                ]
+            },
+            "Zhask": {
+                role: "mage",
+                counters: [
+                    { name: "Hayabusa", reason: "Ultimate ignore spawn dan burst Zhask" },
+                    { name: "Lancelot", reason: "Mobility kill Zhask langsung" },
+                    { name: "Natalia", reason: "Silence dan burst" }
+                ],
+                build: {
+                    core: [
+                        { name: "Arcane Boots", desc: "Magic penetration" },
+                        { name: "Clock of Destiny", desc: "Magic power" },
+                        { name: "Lightning Truncheon", desc: "Burst damage" }
+                    ],
+                    situational: [
+                        { name: "Holy Crystal", desc: "Magic power" },
+                        { name: "Divine Glaive", desc: "Penetration" }
+                    ]
+                },
+                tips: [
+                    "Spawn untuk push dan zone control",
+                    "Ultimate untuk summon big spawn",
+                    "Position spawn strategis"
+                ]
+            },
+            "Faramis": {
+                role: "mage",
+                counters: [
+                    { name: "Diggie", reason: "Counter ultimate Faramis dengan timing" },
+                    { name: "Natalia", reason: "Burst damage Faramis" },
+                    { name: "Lancelot", reason: "High mobility kill Faramis" }
+                ],
+                build: {
+                    core: [
+                        { name: "Arcane Boots", desc: "Magic penetration" },
+                        { name: "Clock of Destiny", desc: "Magic power" },
+                        { name: "Holy Crystal", desc: "Burst damage" }
+                    ],
+                    situational: [
+                        { name: "Divine Glaive", desc: "Penetration" },
+                        { name: "Immortality", desc: "Extra life" }
+                    ]
+                },
+                tips: [
+                    "Ultimate untuk revive ally",
+                    "Skill 1 untuk poke dan damage",
+                    "Timing ultimate crucial untuk teamfight"
+                ]
+            },
+            "Luo Yi": {
+                role: "mage",
+                counters: [
+                    { name: "Natalia", reason: "Silence mencegah combo Luo Yi" },
+                    { name: "Lancelot", reason: "Mobility dodge skill Luo Yi" },
+                    { name: "Diggie", reason: "Immunity CC dari Luo Yi" }
+                ],
+                build: {
+                    core: [
+                        { name: "Arcane Boots", desc: "Magic penetration" },
+                        { name: "Clock of Destiny", desc: "Magic power" },
+                        { name: "Lightning Truncheon", desc: "Burst damage" }
+                    ],
+                    situational: [
+                        { name: "Holy Crystal", desc: "Magic power" },
+                        { name: "Divine Glaive", desc: "Penetration" }
+                    ]
+                },
+                tips: [
+                    "Combo Yin Yang untuk stun dan burst",
+                    "Ultimate untuk teleport team",
+                    "Skill 1 untuk mark Yin/Yang"
+                ]
+            },
+
+            // MARKSMAN ADDITIONAL
+            "Bruno": {
+                role: "marksman",
+                counters: [
+                    { name: "Natalia", reason: "Silence dan burst Bruno" },
+                    { name: "Saber", reason: "Lock dan one shot" },
+                    { name: "Lancelot", reason: "Dive Bruno dengan mobility" }
+                ],
+                build: {
+                    core: [
+                        { name: "Swift Boots", desc: "Attack speed" },
+                        { name: "Berserker's Fury", desc: "Critical damage" },
+                        { name: "Scarlet Phantom", desc: "Critical rate" }
+                    ],
+                    situational: [
+                        { name: "Malefic Roar", desc: "Penetration" },
+                        { name: "Wind of Nature", desc: "Physical immunity" }
+                    ]
+                },
+                tips: [
+                    "Passive untuk extra damage critical",
+                    "Skill 1 untuk poke jarak jauh",
+                    "Ultimate untuk burst AOE damage"
+                ]
+            },
+            "Clint": {
+                role: "marksman",
+                counters: [
+                    { name: "Natalia", reason: "Silence dan burst Clint" },
+                    { name: "Saber", reason: "Lock dan one shot" },
+                    { name: "Lancelot", reason: "High mobility dive" }
+                ],
+                build: {
+                    core: [
+                        { name: "Swift Boots", desc: "Attack speed" },
+                        { name: "Berserker's Fury", desc: "Critical damage" },
+                        { name: "Scarlet Phantom", desc: "Critical rate" }
+                    ],
+                    situational: [
+                        { name: "Endless Battle", desc: "True damage" },
+                        { name: "Wind of Nature", desc: "Immunity" }
+                    ]
+                },
+                tips: [
+                    "Passive berikan extra range",
+                    "Skill 1 untuk poke damage tinggi",
+                    "Ultimate untuk massive damage AOE"
+                ]
+            },
+            "Granger": {
+                role: "marksman",
+                counters: [
+                    { name: "Natalia", reason: "Silence dan burst sebelum reload" },
+                    { name: "Saber", reason: "Lock dan burst Granger" },
+                    { name: "Helcurt", reason: "Silence dan darkness" }
+                ],
+                build: {
+                    core: [
+                        { name: "Swift Boots", desc: "Attack speed" },
+                        { name: "Berserker's Fury", desc: "Critical damage" },
+                        { name: "Hunter Strike", desc: "Burst damage" }
+                    ],
+                    situational: [
+                        { name: "Blade of Despair", desc: "Extra damage" },
+                        { name: "Wind of Nature", desc: "Immunity" }
+                    ]
+                },
+                tips: [
+                    "6 bullets high damage, reload setelah habis",
+                    "Skill 1 untuk dash dan reposition",
+                    "Ultimate untuk burst damage jarak jauh"
+                ]
+            },
+            "Claude": {
+                role: "marksman",
+                counters: [
+                    { name: "Saber", reason: "Lock Claude dan burst" },
+                    { name: "Natalia", reason: "Silence mencegah ultimate" },
+                    { name: "Helcurt", reason: "Silence dan darkness" }
+                ],
+                build: {
+                    core: [
+                        { name: "Swift Boots", desc: "Attack speed" },
+                        { name: "Demon Hunter Sword", desc: "Lifesteal" },
+                        { name: "Golden Staff", desc: "Extra attack" }
+                    ],
+                    situational: [
+                        { name: "Corrosion Scythe", desc: "Slow" },
+                        { name: "Wind of Nature", desc: "Immunity" }
+                    ]
+                },
+                tips: [
+                    "Skill 1 untuk dash dan steal buff",
+                    "Ultimate untuk immune damage dan mirror image",
+                    "Dexter untuk steal and poke"
+                ]
+            },
+            "Hanabi": {
+                role: "marksman",
+                counters: [
+                    { name: "Natalia", reason: "Silence dan burst Hanabi" },
+                    { name: "Saber", reason: "Lock dan one shot" },
+                    { name: "Karina", reason: "Dive dan burst" }
+                ],
+                build: {
+                    core: [
+                        { name: "Swift Boots", desc: "Attack speed" },
+                        { name: "Demon Hunter Sword", desc: "Lifesteal" },
+                        { name: "Scarlet Phantom", desc: "Critical rate" }
+                    ],
+                    situational: [
+                        { name: "Corrosion Scythe", desc: "Slow" },
+                        { name: "Wind of Nature", desc: "Immunity" }
+                    ]
+                },
+                tips: [
+                    "Passive untuk lifesteal shield",
+                    "Skill 1 untuk bounce damage multi target",
+                    "Ultimate untuk immobilize dan AOE"
+                ]
+            },
+            "Irithel": {
+                role: "marksman",
+                counters: [
+                    { name: "Natalia", reason: "Silence dan burst Irithel" },
+                    { name: "Saber", reason: "Lock dan one shot" },
+                    { name: "Lancelot", reason: "Dive dengan mobility" }
+                ],
+                build: {
+                    core: [
+                        { name: "Swift Boots", desc: "Attack speed" },
+                        { name: "Demon Hunter Sword", desc: "Lifesteal" },
+                        { name: "Scarlet Phantom", desc: "Critical rate" }
+                    ],
+                    situational: [
+                        { name: "Corrosion Scythe", desc: "Slow" },
+                        { name: "Wind of Nature", desc: "Immunity" }
+                    ]
+                },
+                tips: [
+                    "Strafe untuk continuous attack saat moving",
+                    "Leo ultimate untuk attack speed boost",
+                    "Skill 2 untuk poke dan slow"
+                ]
+            },
+            "Moskov": {
+                role: "marksman",
+                counters: [
+                    { name: "Natalia", reason: "Silence dan burst Moskov" },
+                    { name: "Saber", reason: "Lock dan burst" },
+                    { name: "Karina", reason: "High burst damage" }
+                ],
+                build: {
+                    core: [
+                        { name: "Swift Boots", desc: "Attack speed" },
+                        { name: "Berserker's Fury", desc: "Critical damage" },
+                        { name: "Scarlet Phantom", desc: "Critical rate" }
+                    ],
+                    situational: [
+                        { name: "Endless Battle", desc: "True damage" },
+                        { name: "Wind of Nature", desc: "Immunity" }
+                    ]
+                },
+                tips: [
+                    "Passive untuk attack penetration",
+                    "Skill 1 untuk dash dan knockback",
+                    "Pin enemy ke wall untuk stun"
+                ]
+            },
+            "Lesley": {
+                role: "marksman",
+                counters: [
+                    { name: "Natalia", reason: "Silence mencegah invisible" },
+                    { name: "Saber", reason: "Lock dan burst Lesley" },
+                    { name: "Helcurt", reason: "Silence dan darkness" }
+                ],
+                build: {
+                    core: [
+                        { name: "Swift Boots", desc: "Attack speed" },
+                        { name: "Berserker's Fury", desc: "Critical damage" },
+                        { name: "Scarlet Phantom", desc: "Critical rate" }
+                    ],
+                    situational: [
+                        { name: "Blade of Despair", desc: "Extra damage" },
+                        { name: "Wind of Nature", desc: "Immunity" }
+                    ]
+                },
+                tips: [
+                    "Passive untuk critical damage tinggi",
+                    "Skill 1 untuk invisible dan escape",
+                    "Ultimate untuk snipe jarak jauh"
+                ]
+            },
+            "Roger": {
+                role: "marksman",
+                counters: [
+                    { name: "Khufra", reason: "Counter dash Roger" },
+                    { name: "Ruby", reason: "CC chain dan lifesteal" },
+                    { name: "Esmeralda", reason: "Shield absorb damage" }
+                ],
+                build: {
+                    core: [
+                        { name: "Swift Boots", desc: "Attack speed" },
+                        { name: "Berserker's Fury", desc: "Critical damage" },
+                        { name: "Endless Battle", desc: "True damage" }
+                    ],
+                    situational: [
+                        { name: "Blade of Despair", desc: "Extra damage" },
+                        { name: "Immortality", desc: "Second life" }
+                    ]
+                },
+                tips: [
+                    "Human form untuk range attack",
+                    "Wolf form untuk melee burst",
+                    "Switch form sesuai situasi"
+                ]
+            },
+            "Popol and Kupa": {
+                role: "marksman",
+                counters: [
+                    { name: "Natalia", reason: "Burst Popol tanpa Kupa" },
+                    { name: "Saber", reason: "Lock dan burst" },
+                    { name: "Lancelot", reason: "Dive dengan mobility" }
+                ],
+                build: {
+                    core: [
+                        { name: "Swift Boots", desc: "Attack speed" },
+                        { name: "Demon Hunter Sword", desc: "Lifesteal" },
+                        { name: "Scarlet Phantom", desc: "Critical rate" }
+                    ],
+                    situational: [
+                        { name: "Corrosion Scythe", desc: "Slow" },
+                        { name: "Wind of Nature", desc: "Immunity" }
+                    ]
+                },
+                tips: [
+                    "Kupa untuk tank damage dan bite",
+                    "Ultimate untuk trap area",
+                    "Skill 1 untuk poke dan Kupa bite"
+                ]
+            },
+            "Brody": {
+                role: "marksman",
+                counters: [
+                    { name: "Natalia", reason: "Silence dan burst Brody" },
+                    { name: "Saber", reason: "Lock dan burst" },
+                    { name: "Helcurt", reason: "Silence dan darkness" }
+                ],
+                build: {
+                    core: [
+                        { name: "Swift Boots", desc: "Attack speed" },
+                        { name: "Berserker's Fury", desc: "Critical damage" },
+                        { name: "Scarlet Phantom", desc: "Critical rate" }
+                    ],
+                    situational: [
+                        { name: "Blade of Despair", desc: "Extra damage" },
+                        { name: "Wind of Nature", desc: "Immunity" }
+                    ]
+                },
+                tips: [
+                    "Stack mark dengan basic attack",
+                    "Skill 1 untuk burst stacked mark",
+                    "Ultimate untuk slow dan massive damage"
+                ]
+            },
+            "Yi Sun-shin": {
+                role: "marksman",
+                counters: [
+                    { name: "Natalia", reason: "Burst Yi Sun-shin dengan silence" },
+                    { name: "Saber", reason: "Lock dan one shot" },
+                    { name: "Lancelot", reason: "Dive dengan mobility" }
+                ],
+                build: {
+                    core: [
+                        { name: "Swift Boots", desc: "Attack speed" },
+                        { name: "Berserker's Fury", desc: "Critical damage" },
+                        { name: "Scarlet Phantom", desc: "Critical rate" }
+                    ],
+                    situational: [
+                        { name: "Blade of Despair", desc: "Extra damage" },
+                        { name: "Wind of Nature", desc: "Immunity" }
+                    ]
+                },
+                tips: [
+                    "Switch glaive/bow sesuai range",
+                    "Ultimate untuk global poke damage",
+                    "Skill 2 untuk vision dan slow"
+                ]
+            },
+
+            // SUPPORT ADDITIONAL
+            "Rafaela": {
+                role: "support",
+                counters: [
+                    { name: "Baxia", reason: "Anti-heal counter regen Rafaela" },
+                    { name: "Franco", reason: "Hook Rafaela dari posisi aman" },
+                    { name: "Natalia", reason: "Burst damage Rafaela" }
+                ],
+                build: {
+                    core: [
+                        { name: "Demon Shoes", desc: "Mana regen" },
+                        { name: "Enchanted Talisman", desc: "Cooldown reduction" },
+                        { name: "Oracle", desc: "Boost heal effect" }
+                    ],
+                    situational: [
+                        { name: "Dominance Ice", desc: "Counter lifesteal" },
+                        { name: "Athena's Shield", desc: "Magic defense" }
+                    ]
+                },
+                tips: [
+                    "Skill 1 untuk heal dan speed boost ally",
+                    "Skill 2 untuk slow musuh",
+                    "Ultimate untuk massive slow AOE"
+                ]
+            },
+            "Mathilda": {
+                role: "support",
+                counters: [
+                    { name: "Diggie", reason: "Counter CC Mathilda" },
+                    { name: "Khufra", reason: "Counter dash Mathilda" },
+                    { name: "Natalia", reason: "Burst damage Mathilda" }
+                ],
+                build: {
+                    core: [
+                        { name: "Arcane Boots", desc: "Magic penetration" },
+                        { name: "Enchanted Talisman", desc: "Cooldown reduction" },
+                        { name: "Holy Crystal", desc: "Magic power untuk shield" }
+                    ],
+                    situational: [
+                        { name: "Oracle", desc: "Boost shield" },
+                        { name: "Immortality", desc: "Second life" }
+                    ]
+                },
+                tips: [
+                    "Skill 2 untuk dash ke ally dan buff",
+                    "Ultimate untuk CC chain musuh",
+                    "Combo dengan fighter/assassin untuk engage"
+                ]
+            },
+            "Floryn": {
+                role: "support",
+                counters: [
+                    { name: "Baxia", reason: "Anti-heal counter regen Floryn" },
+                    { name: "Natalia", reason: "Burst Floryn dengan silence" },
+                    { name: "Franco", reason: "Hook Floryn dari backline" }
+                ],
+                build: {
+                    core: [
+                        { name: "Demon Shoes", desc: "Mana regen" },
+                        { name: "Enchanted Talisman", desc: "Cooldown reduction" },
+                        { name: "Oracle", desc: "Boost heal dan shield" }
+                    ],
+                    situational: [
+                        { name: "Dominance Ice", desc: "Counter lifesteal" },
+                        { name: "Athena's Shield", desc: "Magic defense" }
+                    ]
+                },
+                tips: [
+                    "Plant seed untuk heal zone",
+                    "Ultimate untuk summon enhance seed",
+                    "Skill 1 untuk poke dan plant"
+                ]
+            },
+            "Carmilla": {
+                role: "support",
+                counters: [
+                    { name: "Diggie", reason: "Immunity CC dari Carmilla" },
+                    { name: "Karrie", reason: "True damage ignore HP link" },
+                    { name: "Natalia", reason: "Burst damage Carmilla" }
+                ],
+                build: {
+                    core: [
+                        { name: "Arcane Boots", desc: "Magic penetration" },
+                        { name: "Clock of Destiny", desc: "HP dan magic power" },
+                        { name: "Holy Crystal", desc: "Magic power" }
+                    ],
+                    situational: [
+                        { name: "Oracle", desc: "HP regen" },
+                        { name: "Immortality", desc: "Second life" }
+                    ]
+                },
+                tips: [
+                    "Ultimate untuk link dengan Cecilion",
+                    "Skill 1 untuk link damage share",
+                    "Combo dengan Cecilion untuk synergy"
+                ]
+            },
+            "Chip": {
+                role: "support",
+                counters: [
+                    { name: "Baxia", reason: "Anti-heal counter shield regen" },
+                    { name: "Karrie", reason: "True damage ignore shield" },
+                    { name: "Natalia", reason: "Burst damage Chip" }
+                ],
+                build: {
+                    core: [
+                        { name: "Demon Shoes", desc: "Mana regen" },
+                        { name: "Enchanted Talisman", desc: "Cooldown reduction" },
+                        { name: "Oracle", desc: "Boost shield effect" }
+                    ],
+                    situational: [
+                        { name: "Dominance Ice", desc: "Counter attack speed" },
+                        { name: "Athena's Shield", desc: "Magic defense" }
+                    ]
+                },
+                tips: [
+                    "Shield ally untuk protection",
+                    "Ultimate untuk massive shield AOE",
+                    "Skill 1 untuk poke dan slow"
+                ]
+            },
+            "Franco": {
+                role: "support",
+                counters: [
+                    { name: "Diggie", reason: "Immunity dari hook Franco" },
+                    { name: "Khufra", reason: "Counter positioning Franco" },
+                    { name: "Natalia", reason: "Burst Franco dengan silence" }
+                ],
+                build: {
+                    core: [
+                        { name: "Warrior Boots", desc: "Physical defense" },
+                        { name: "Cursed Helmet", desc: "Magic damage" },
+                        { name: "Dominance Ice", desc: "Counter lifesteal" }
+                    ],
+                    situational: [
+                        { name: "Antique Cuirass", desc: "Reduce physical attack" },
+                        { name: "Oracle", desc: "HP regen" }
+                    ]
+                },
+                tips: [
+                    "Hook carry musuh untuk pick off",
+                    "Skill 2 untuk slow area",
+                    "Ultimate untuk suppress single target"
+                ]
+            },
+            "Kaja": {
+                role: "support",
+                counters: [
+                    { name: "Diggie", reason: "Immunity dari ultimate Kaja" },
+                    { name: "Natalia", reason: "Burst Kaja dengan silence" },
+                    { name: "Khufra", reason: "Counter dash Kaja" }
+                ],
+                build: {
+                    core: [
+                        { name: "Arcane Boots", desc: "Magic penetration" },
+                        { name: "Clock of Destiny", desc: "Magic power" },
+                        { name: "Holy Crystal", desc: "Burst damage" }
+                    ],
+                    situational: [
+                        { name: "Divine Glaive", desc: "Penetration" },
+                        { name: "Immortality", desc: "Second life" }
+                    ]
+                },
+                tips: [
+                    "Ultimate untuk pull carry musuh",
+                    "Skill 1 untuk poke dan vision",
+                    "Combo dengan team untuk burst target"
+                ]
+            }
+        };
+
+        const heroesGrid = document.getElementById('heroesGrid');
+        const searchBox = document.getElementById('searchBox');
+        const resultSection = document.getElementById('resultSection');
+        const roleButtons = document.querySelectorAll('.role-btn');
+        
+        let currentRole = 'all';
+        let searchQuery = '';
+
+        function renderHeroes() {
+            const filteredHeroes = Object.entries(heroesData).filter(([name, data]) => {
+                const matchRole = currentRole === 'all' || data.role === currentRole;
+                const matchSearch = name.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchRole && matchSearch;
+            });
+
+            heroesGrid.innerHTML = filteredHeroes.map(([name, data]) => `
+                <div class="hero-card" onclick="showCounters('${name}')">
+                    <div class="hero-icon">${name.charAt(0)}</div>
+                    <div class="hero-name">${name}</div>
+                    <div class="hero-role">${data.role}</div>
+                </div>
+            `).join('');
+
+            if (filteredHeroes.length === 0) {
+                heroesGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: rgba(255,255,255,0.5); padding: 2rem;">Tidak ada hero ditemukan</p>';
+            }
+        }
+
+        function showCounters(heroName) {
+            const hero = heroesData[heroName];
+            
+            resultSection.innerHTML = `
+                <div class="result-header">
+                    <h2>Counter untuk ${heroName}</h2>
+                    <p style="color: var(--primary); margin-top: 0.5rem;">Role: ${hero.role.toUpperCase()}</p>
+                </div>
+
+                <div class="counters-grid">
+                    ${hero.counters.map(counter => `
+                        <div class="counter-card">
+                            <div class="counter-name">🎯 ${counter.name}</div>
+                            <div class="counter-reason">${counter.reason}</div>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="build-section">
+                    <h3 class="build-title">⚔️ Build Item Melawan ${heroName}</h3>
+                    <div class="build-grid">
+                        <div>
+                            <h4 style="color: var(--accent); margin-bottom: 1rem; font-size: 1.1rem;">Core Items:</h4>
+                            ${hero.build.core.map(item => `
+                                <div class="build-item">
+                                    <div class="build-item-name">${item.name}</div>
+                                    <div class="build-item-desc">${item.desc}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div>
+                            <h4 style="color: var(--accent); margin-bottom: 1rem; font-size: 1.1rem;">Situational Items:</h4>
+                            ${hero.build.situational.map(item => `
+                                <div class="build-item">
+                                    <div class="build-item-name">${item.name}</div>
+                                    <div class="build-item-desc">${item.desc}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tips-section">
+                    <div class="tips-title">💡 Tips Menghadapi ${heroName}</div>
+                    <ul class="tips-list">
+                        ${hero.tips.map(tip => `<li>${tip}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+            
+            resultSection.classList.remove('hidden');
+            resultSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        searchBox.addEventListener('input', (e) => {
+            searchQuery = e.target.value;
+            renderHeroes();
+        });
+
+        roleButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                roleButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentRole = btn.dataset.role;
+                renderHeroes();
+            });
+        });
+
+        // Initial render
+        renderHeroes();
+    </script>
+</body>
+</html>
